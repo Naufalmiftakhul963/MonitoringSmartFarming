@@ -187,7 +187,7 @@ Pastikan sudah terinstal di komputer kamu:
 ### Langkah 1 — Clone Repository
 
 ```bash
-git clone https://github.com/alfarezalfathir/MonitoringSmartFarming.git
+git clone https://github.com/Naufalmiftakhul963/MonitoringSmartFarming.git
 cd MonitoringSmartFarming
 ```
 
