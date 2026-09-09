@@ -14,11 +14,11 @@
 
 ---
 
-## 📖 Tentang Proyek
+## Tentang Proyek
 
 **Smart Farming IoT Monitoring System** adalah aplikasi web full-stack yang dirancang untuk memantau kondisi lahan pertanian secara real-time. Sistem ini mensimulasikan penggunaan sensor IoT pada beberapa petak lahan pertanian, di mana data sensor (suhu, kelembaban tanah, kelembaban udara, intensitas cahaya) dan status perangkat (pompa, kipas, lampu, mode kontrol) disimpan di **Supabase** (cloud database), diproses melalui **backend Express.js**, dan divisualisasikan di **frontend React + Vite** dengan tampilan dashboard interaktif dan model 3D.
 
-### 🎯 Tujuan Proyek
+### Tujuan Proyek
 
 - Memonitor kondisi lahan pertanian secara real-time melalui dashboard berbasis web
 - Menyediakan visualisasi data sensor dalam bentuk grafik, tabel, dan model 3D interaktif
@@ -28,7 +28,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 | Teknologi | Versi | Fungsi |
@@ -59,26 +59,26 @@
 
 ---
 
-## 🔄 Alur Kerja Sistem (Flowchart)
+## Alur Kerja Sistem (Flowchart)
 
 ```mermaid
 flowchart TD
-    A["🌡️ Sensor IoT di Lahan<br/>(Suhu, Kelembaban, Cahaya)"] -->|Kirim Data| B["🗄️ Supabase Database<br/>(PostgreSQL Cloud)"]
+    A["Sensor IoT di Lahan<br/>(Suhu, Kelembaban, Cahaya)"] -->|Kirim Data| B["Supabase Database<br/>(PostgreSQL Cloud)"]
     
-    B -->|Query Data| C["⚙️ Backend Express.js<br/>(localhost:5000)"]
+    B -->|Query Data| C["Backend Express.js<br/>(localhost:5000)"]
     
-    C -->|REST API Response| D["🖥️ Frontend React + Vite<br/>(localhost:5173)"]
+    C -->|REST API Response| D["Frontend React + Vite<br/>(localhost:5173)"]
     
-    D --> E{"📊 Halaman Dashboard"}
-    D --> F{"🎮 Control Panel"}
-    D --> G{"📋 Report Page"}
-    D --> H{"ℹ️ About Page"}
+    D --> E{"Halaman Dashboard"}
+    D --> F{"Control Panel"}
+    D --> G{"Report Page"}
+    D --> H{"About Page"}
     
-    E --> E1["📈 Grafik Sensor<br/>(Recharts)"]
-    E --> E2["🏞️ Model 3D Lahan<br/>(Three.js)"]
-    E --> E3["📋 Tabel Data Sensor"]
-    E --> E4["🚨 Alert & Rekomendasi"]
-    E --> E5["🥧 Distribusi Status<br/>(Pie Chart)"]
+    E --> E1["Grafik Sensor<br/>(Recharts)"]
+    E --> E2["Model 3D Lahan<br/>(Three.js)"]
+    E --> E3["Tabel Data Sensor"]
+    E --> E4["Alert & Rekomendasi"]
+    E --> E5["Distribusi Status<br/>(Pie Chart)"]
     
     F -->|Toggle Perangkat| C
     C -->|PUT /api/...| B
@@ -98,10 +98,10 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-    participant User as 👤 User (Browser)
-    participant FE as 🖥️ Frontend<br/>(React + Vite)
-    participant BE as ⚙️ Backend<br/>(Express.js)
-    participant DB as 🗄️ Supabase<br/>(PostgreSQL)
+    participant User as User (Browser)
+    participant FE as Frontend<br/>(React + Vite)
+    participant BE as Backend<br/>(Express.js)
+    participant DB as Supabase<br/>(PostgreSQL)
 
     Note over User,DB: 📡 Alur Pengambilan Data Sensor
     User->>FE: Buka Dashboard
@@ -111,7 +111,7 @@ sequenceDiagram
     BE-->>FE: JSON response
     FE-->>User: Render Dashboard + Grafik + 3D Model
 
-    Note over User,DB: 📊 Auto Refresh (setiap 60 detik)
+    Note over User,DB: Auto Refresh (setiap 60 detik)
     loop Setiap 60 detik
         FE->>BE: GET /api/sensors
         FE->>BE: GET /api/summary
@@ -121,7 +121,7 @@ sequenceDiagram
         FE-->>User: Update tampilan
     end
 
-    Note over User,DB: 💧 Kontrol Perangkat
+    Note over User,DB: Kontrol Perangkat
     User->>FE: Klik Toggle Perangkat
     FE->>BE: PUT /api/[device]/:id
     BE->>DB: UPDATE sensor_data SET [device]_status
@@ -174,7 +174,7 @@ monitoring_smartfarming/
 
 ---
 
-## 🚀 Cara Instalasi & Menjalankan
+## Cara Instalasi & Menjalankan
 
 ### Prasyarat
 
@@ -259,11 +259,11 @@ Frontend akan berjalan di: **http://localhost:5173**
 
 Buka browser dan akses: **http://localhost:5173**
 
-> 💡 **Tips:** Pastikan backend (port 5000) sudah berjalan terlebih dahulu sebelum membuka frontend agar data sensor bisa tampil.
+> **Tips:** Pastikan backend (port 5000) sudah berjalan terlebih dahulu sebelum membuka frontend agar data sensor bisa tampil.
 
 ---
 
-## 🌐 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
@@ -312,9 +312,9 @@ Buka browser dan akses: **http://localhost:5173**
 
 ---
 
-## 📊 Fitur Utama
+## Fitur Utama
 
-### 🏠 Home Page
+### Home Page
 - Landing page dengan penjelasan sistem
 - Preview arsitektur teknologi yang digunakan
 
@@ -328,21 +328,21 @@ Buka browser dan akses: **http://localhost:5173**
 - **Tabel Data Sensor** — Data lengkap dari Supabase dengan live badge
 - **Auto Refresh** — Data diperbarui otomatis setiap 60 detik
 
-### 🎮 Control Panel
+### Control Panel
 - Kontrol aktuator (pompa irigasi, kipas ventilasi, lampu tanaman)
 - Toggle ON/OFF perangkat secara individual
 - Pengaturan mode AUTO / MANUAL untuk setiap petak
 
-### 📋 Report
+### Report
 - Laporan ringkasan kondisi seluruh petak lahan
 - Statistik dan analisis data sensor
 
-### ℹ️ About
+### About
 - Informasi tentang proyek dan teknologi yang digunakan
 
 ---
 
-## ⚙️ Logika Status Sensor
+## Logika Status Sensor
 
 Sistem menentukan status lahan berdasarkan dua parameter utama:
 
@@ -354,12 +354,13 @@ Sistem menentukan status lahan berdasarkan dua parameter utama:
 
 ---
 
-## 👨‍💻 Dibuat Oleh
+## Dibuat Oleh
 
 **Naufal Miftakhul Huda**
 
 ---
 
-## 📄 Lisensi
+## Keterangan Tambahan
 
-Proyek ini dibuat untuk keperluan edukasi dan pengembangan.
+Proyek ini dibuat untuk keperluan tugas matakuliah Sistem Pengukuran dan Monitoring.
+Dosen Pengampu : Dr. Ir. Nur Abdillah Siddiq, S.T.,IPP
