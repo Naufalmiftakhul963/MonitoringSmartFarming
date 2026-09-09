@@ -1,0 +1,12 @@
+
+PENGUJIAN LATENSI PENYIMPANAN DATA SENSOR
+=========================================
+Batch                : TEST-50-DATA-1780312028691
+Data dikirim         : 50
+Data berhasil masuk  : 50
+Data gagal masuk     : 0
+Persentase berhasil  : 100.00%
+Latensi minimum      : 117.00 ms
+Latensi maksimum     : 1911.00 ms
+Rata-rata latensi    : 160.38 ms
+Rata-rata round trip : 182.41 ms
