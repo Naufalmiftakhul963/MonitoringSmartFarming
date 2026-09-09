@@ -469,7 +469,7 @@ function AboutPage() {
 
           <a
             className="about-secondary-button"
-            href="https://github.com/alfarezalfathir/MonitoringSmartFarming"
+            href="https://github.com/Naufalmiftakhul963/MonitoringSmartFarming"
             target="_blank"
             rel="noreferrer"
           >
