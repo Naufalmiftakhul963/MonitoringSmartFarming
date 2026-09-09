@@ -356,7 +356,7 @@ Sistem menentukan status lahan berdasarkan dua parameter utama:
 
 ## 👨‍💻 Dibuat Oleh
 
-**Alfareza Alfathir**
+**Naufal Miftakhul Huda**
 
 ---
 
