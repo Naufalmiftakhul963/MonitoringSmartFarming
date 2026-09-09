@@ -318,7 +318,7 @@ Buka browser dan akses: **http://localhost:5173**
 - Landing page dengan penjelasan sistem
 - Preview arsitektur teknologi yang digunakan
 
-### 📈 Dashboard
+### Dashboard
 - **Summary Cards** — Total petak, rata-rata kelembaban, suhu tertinggi, perangkat aktif, area kritis
 - **Model 3D Interaktif** — Visualisasi lahan pertanian dengan Three.js (drag, zoom, klik petak)
 - **Alert Kondisi Lahan** — Peringatan untuk area yang membutuhkan perhatian
