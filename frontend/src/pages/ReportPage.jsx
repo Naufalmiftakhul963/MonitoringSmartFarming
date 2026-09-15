@@ -1,717 +1,1332 @@
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-
-import {
   Activity,
   AlertTriangle,
   Bot,
-  CheckCircle,
+  CalendarDays,
+  CheckCircle2,
   ClipboardList,
+  CloudRain,
   Database,
   Download,
   Droplets,
+  FileSpreadsheet,
   FileText,
-  Lightbulb,
-  Printer,
-  RefreshCw,
-  Sprout,
-  Thermometer,
-  Wind,
+  Gauge,
   Power,
+  Sprout,
+  Sun,
+  TrendingUp,
+  Wind,
 } from "lucide-react";
 
 import {
   getGlobalStatusClass,
   getGlobalStatusLabel,
-  getRecommendation,
+  getSoilCondition,
+  getWeatherStatus,
+  isRaining,
 } from "../utils/farmUtils";
 
 import "./ReportPage.css";
 
-// ========================================
-// FUNGSI BANTUAN
-// ========================================
+/* =========================================================
+   CSV
+   ========================================================= */
 
-function getAverage(data, key) {
-  if (!data.length) return 0;
+function escapeCSV(value) {
+  const text =
+    value === null || value === undefined
+      ? ""
+      : String(value);
 
-  const total = data.reduce(
-    (sum, item) => sum + Number(item[key] || 0),
-    0
-  );
-
-  return (total / data.length).toFixed(1);
+  return `"${text.replace(/"/g, '""')}"`;
 }
 
-function getMaximum(data, key) {
-  if (!data.length) return 0;
+function getFileDate() {
+  const now = new Date();
 
-  return Math.max(
-    ...data.map((item) => Number(item[key] || 0))
-  );
+  const year = now.getFullYear();
+
+  const month = String(
+    now.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    now.getDate()
+  ).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
-function getMinimum(data, key) {
-  if (!data.length) return 0;
+/* =========================================================
+   REPORT PAGE
+   ========================================================= */
 
-  return Math.min(
-    ...data.map((item) => Number(item[key] || 0))
-  );
-}
+function ReportPage({
+  sensors = [],
+  summary,
+  environment,
+}) {
+  const raining =
+    isRaining(environment);
 
-function downloadCSV(sensors) {
-  if (!sensors.length) {
-    alert("Data sensor belum tersedia.");
-    return;
+  const weatherStatus =
+    getWeatherStatus(environment);
+
+  const humidity =
+    Number(
+      environment?.humidity ?? 0
+    );
+
+  const WeatherIcon =
+    raining
+      ? CloudRain
+      : Sun;
+
+  /* =======================================================
+     SUMMARY
+     ======================================================= */
+
+  const totalPetak =
+    Number(
+      summary?.totalPetak ??
+        sensors.length
+    );
+
+  const avgSoilMoisture =
+    Number(
+      summary?.avgSoilMoisture ??
+        0
+    );
+
+  const activePump =
+    raining
+      ? 0
+      : Number(
+          summary?.activePump ??
+            0
+        );
+
+  const autoModeArea =
+    Number(
+      summary?.autoModeArea ??
+        0
+    );
+
+  const criticalArea =
+    Number(
+      summary?.criticalArea ??
+        0
+    );
+
+  const warningArea =
+    Number(
+      summary?.warningArea ??
+        0
+    );
+
+  const normalArea =
+    Number(
+      summary?.normalArea ??
+        0
+    );
+
+  const manualModeArea =
+    Math.max(
+      totalPetak -
+        autoModeArea,
+      0
+    );
+
+  /* =======================================================
+     DATE
+     ======================================================= */
+
+  const now =
+    new Date();
+
+  const reportDate =
+    now.toLocaleDateString(
+      "id-ID",
+      {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }
+    );
+
+  const reportTime =
+    now.toLocaleTimeString(
+      "id-ID",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+
+  /* =======================================================
+     HEALTH SCORE
+     hanya representasi ringkasan laporan
+     ======================================================= */
+
+  const safePercentage =
+    totalPetak > 0
+      ? Math.round(
+          (normalArea /
+            totalPetak) *
+            100
+        )
+      : 0;
+
+  /* =======================================================
+     SYSTEM FINDINGS
+     ======================================================= */
+
+  const findings = [];
+
+  if (raining) {
+    findings.push({
+      type: "info",
+      title:
+        "Global rain override aktif",
+      description:
+        "Rain sensor mendeteksi hujan sehingga seluruh pompa harus berada dalam kondisi OFF.",
+    });
+  } else {
+    findings.push({
+      type: "success",
+      title:
+        "Rain sensor normal",
+      description:
+        "Tidak ada hujan terdeteksi. Petak dengan mode AUTO dapat mengikuti nilai soil moisture.",
+    });
   }
 
-  const headers = [
-    "Petak",
-    "Suhu (C)",
-    "Kelembaban Tanah (%)",
-    "Kelembaban Udara (%)",
-    "Intensitas Cahaya (lux)",
-    "Pompa",
-    "Kipas",
-    "Lampu",
-    "Mode",
-    "Status",
-    "Rekomendasi",
-  ];
+  if (criticalArea > 0) {
+    findings.push({
+      type: "critical",
+      title:
+        `${criticalArea} petak berada pada kondisi kritis`,
+      description:
+        "Petak dengan soil moisture di bawah 25% membutuhkan perhatian terhadap kondisi tanah.",
+    });
+  } else {
+    findings.push({
+      type: "success",
+      title:
+        "Tidak ada petak kritis",
+      description:
+        "Seluruh petak memiliki soil moisture minimal 25%.",
+    });
+  }
 
-  const rows = sensors.map((item) => [
-    item.area,
-    item.temperature,
-    item.soil_moisture,
-    item.humidity,
-    item.light,
-    item.pump_status || "OFF",
-    item.fan_status || "OFF",
-    item.lamp_status || "OFF",
-    item.control_mode || "MANUAL",
-    getGlobalStatusLabel(item),
-    getRecommendation(item),
-  ]);
+  if (warningArea > 0) {
+    findings.push({
+      type: "warning",
+      title:
+        `${warningArea} petak berstatus waspada`,
+      description:
+        "Soil moisture berada pada rentang 25–39% dan perlu terus dipantau.",
+    });
+  }
 
-  const csvContent = [headers, ...rows]
-    .map((row) =>
-      row
-        .map((cell) => {
-          const safeCell = String(cell ?? "").replace(/"/g, '""');
-          return `"${safeCell}"`;
-        })
-        .join(",")
-    )
-    .join("\n");
-
-  const blob = new Blob([csvContent], {
-    type: "text/csv;charset=utf-8;",
+  findings.push({
+    type: "neutral",
+    title:
+      `${autoModeArea} dari ${totalPetak} petak menggunakan AUTO`,
+    description:
+      `${manualModeArea} petak lainnya saat ini menggunakan mode MANUAL.`,
   });
 
-  const url = URL.createObjectURL(blob);
+  /* =======================================================
+     CSV EXPORT
+     ======================================================= */
 
-  const link = document.createElement("a");
+  function exportCSV() {
+    if (!sensors.length) {
+      window.alert(
+        "Belum ada data yang dapat diekspor."
+      );
 
-  link.href = url;
-  link.download = `laporan-smart-farming-${new Date()
-    .toISOString()
-    .slice(0, 10)}.csv`;
+      return;
+    }
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    const headers = [
+      "No",
+      "Petak",
+      "Kelembapan Tanah (%)",
+      "Kondisi Tanah",
+      "Status Lahan",
+      "Status Pompa",
+      "Mode Kontrol",
+      "Rain Sensor",
+      "Kelembapan Udara Global (%)",
+      "Tanggal Laporan",
+      "Waktu Laporan",
+    ];
 
-  URL.revokeObjectURL(url);
-}
+    const rows =
+      sensors.map(
+        (
+          item,
+          index
+        ) => [
+          index + 1,
 
-// ========================================
-// REPORT PAGE
-// ========================================
+          item?.area ??
+            `Petak ${
+              item?.plot_number ??
+              "-"
+            }`,
 
-function ReportPage({ sensors = [], summary = null }) {
-  const normalCount = sensors.filter(
-    (item) => getGlobalStatusClass(item) === "normal"
-  ).length;
+          Number(
+            item?.soil_moisture ??
+              0
+          ),
 
-  const warningCount = sensors.filter(
-    (item) => getGlobalStatusClass(item) === "warning"
-  ).length;
+          getSoilCondition(
+            item
+          ),
 
-  const criticalCount = sensors.filter(
-    (item) => getGlobalStatusClass(item) === "critical"
-  ).length;
+          getGlobalStatusLabel(
+            item
+          ),
 
-  const statusData = [
-    {
-      name: "Normal",
-      value: normalCount,
-      color: "#22c55e",
-    },
-    {
-      name: "Waspada",
-      value: warningCount,
-      color: "#eab308",
-    },
-    {
-      name: "Kritis",
-      value: criticalCount,
-      color: "#ef4444",
-    },
-  ];
+          String(
+            item?.pump_status ||
+              "OFF"
+          ).toUpperCase(),
 
-  const deviceData = [
-    {
-      name: "Pompa",
-      value: summary?.activePump ?? 0,
-    },
-    {
-      name: "Kipas",
-      value: summary?.activeFan ?? 0,
-    },
-    {
-      name: "Lampu",
-      value: summary?.activeLamp ?? 0,
-    },
-    {
-      name: "Mode AUTO",
-      value: summary?.autoModeArea ?? 0,
-    },
-  ];
+          String(
+            item?.control_mode ||
+              "MANUAL"
+          ).toUpperCase(),
 
-  const reportCards = [
-    {
-      label: "Total Petak",
-      value: summary?.totalPetak ?? sensors.length,
-      caption: "Area lahan terpantau",
-      icon: Sprout,
-      tone: "green",
-    },
-    {
-      label: "Rata-rata Tanah",
-      value: `${getAverage(sensors, "soil_moisture")}%`,
-      caption: "Kelembaban keseluruhan",
-      icon: Droplets,
-      tone: "blue",
-    },
-    {
-      label: "Rata-rata Suhu",
-      value: `${getAverage(sensors, "temperature")}°C`,
-      caption: "Suhu seluruh petak",
-      icon: Thermometer,
-      tone: "orange",
-    },
-    {
-      label: "Area Kritis",
-      value: criticalCount,
-      caption: "Perlu tindak lanjut",
-      icon: AlertTriangle,
-      tone: "red",
-    },
-  ];
+          weatherStatus,
+
+          humidity,
+
+          reportDate,
+
+          reportTime,
+        ]
+      );
+
+    const csv = [
+      headers
+        .map(escapeCSV)
+        .join(","),
+
+      ...rows.map(
+        (row) =>
+          row
+            .map(escapeCSV)
+            .join(",")
+      ),
+    ].join("\n");
+
+    const blob =
+      new Blob(
+        [
+          "\uFEFF" +
+            csv,
+        ],
+        {
+          type:
+            "text/csv;charset=utf-8;",
+        }
+      );
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+    link.href = url;
+
+    link.download =
+      `smartfarm-report-${getFileDate()}.csv`;
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+      link
+    );
+
+    URL.revokeObjectURL(
+      url
+    );
+  }
 
   return (
-    <main className="report-shell">
-      {/* ========================================
-          HERO
-      ======================================== */}
+    <main className="report-page">
 
-      <section className="report-hero">
-        <div>
-          <div className="report-eyebrow">
-            <FileText size={17} />
-            SMART FARMING REPORT
+      {/* ===================================================
+          DOCUMENT HEADER
+          =================================================== */}
+
+      <section className="report-document-header">
+
+        <div className="report-document-brand">
+
+          <div className="report-document-logo">
+            <FileText
+              size={28}
+            />
           </div>
 
-          <h1>Laporan Monitoring Lahan</h1>
+          <div>
 
-          <p>
-            Ringkasan kondisi sensor, status perangkat, dan rekomendasi
-            sistem berdasarkan data terbaru dari seluruh petak pertanian.
-          </p>
-
-          <div className="report-hero-badges">
-            <span>
-              <Database size={15} />
-              Supabase Database
+            <span className="report-overline">
+              SMART FARM MONITORING REPORT
             </span>
 
-            <span>
-              <Activity size={15} />
-              Live Monitoring
-            </span>
+            <h1>
+              Laporan Kondisi Lahan
+              & Sistem Irigasi
+            </h1>
 
-            <span>
-              <ClipboardList size={15} />
-              {sensors.length} Petak Terpantau
-            </span>
+            <p>
+              Laporan ringkas hasil
+              monitoring sensor,
+              lingkungan, dan sistem
+              irigasi Smart Farming.
+            </p>
+
           </div>
+
         </div>
 
-        <div className="report-actions">
-          <button
-            className="report-action secondary"
-            onClick={() => window.print()}
-          >
-            <Printer size={17} />
-            Cetak Laporan
-          </button>
+        <div className="report-header-actions">
+
+          <div className="report-id">
+
+            <span>
+              REPORT DATE
+            </span>
+
+            <strong>
+              {reportDate}
+            </strong>
+
+            <small>
+              {reportTime}
+            </small>
+
+          </div>
 
           <button
-            className="report-action primary"
-            onClick={() => downloadCSV(sensors)}
+            type="button"
+            onClick={
+              exportCSV
+            }
+            disabled={
+              !sensors.length
+            }
           >
-            <Download size={17} />
-            Download CSV
+            <Download
+              size={17}
+            />
+
+            Export CSV
           </button>
+
         </div>
+
       </section>
 
-      {/* ========================================
-          SUMMARY
-      ======================================== */}
+      {/* ===================================================
+          EXECUTIVE SUMMARY
+          =================================================== */}
 
-      <section className="report-summary-grid">
-        {reportCards.map(
-          ({
-            label,
-            value,
-            caption,
-            icon: Icon,
-            tone,
-          }) => (
-            <article className="report-summary-card" key={label}>
-              <div className={`report-summary-icon ${tone}`}>
-                <Icon size={23} />
+      <section className="report-executive">
+
+        <div className="report-section-title">
+
+          <div>
+
+            <span>
+              01 • EXECUTIVE SUMMARY
+            </span>
+
+            <h2>
+              Ringkasan Monitoring
+            </h2>
+
+          </div>
+
+          <Activity
+            size={22}
+          />
+
+        </div>
+
+        <div className="report-executive-grid">
+
+          <article>
+
+            <span>
+              TOTAL PETAK
+            </span>
+
+            <strong>
+              {totalPetak}
+            </strong>
+
+            <small>
+              area terpantau
+            </small>
+
+          </article>
+
+          <article>
+
+            <span>
+              AVG SOIL
+            </span>
+
+            <strong>
+              {avgSoilMoisture}
+              <small>%</small>
+            </strong>
+
+            <small>
+              rata-rata lahan
+            </small>
+
+          </article>
+
+          <article>
+
+            <span>
+              POMPA AKTIF
+            </span>
+
+            <strong>
+              {activePump}
+            </strong>
+
+            <small>
+              dari {totalPetak}
+              {" "}
+              petak
+            </small>
+
+          </article>
+
+          <article>
+
+            <span>
+              AUTO MODE
+            </span>
+
+            <strong>
+              {autoModeArea}
+            </strong>
+
+            <small>
+              petak otomatis
+            </small>
+
+          </article>
+
+          <article
+            className={
+              criticalArea > 0
+                ? "danger"
+                : ""
+            }
+          >
+
+            <span>
+              AREA KRITIS
+            </span>
+
+            <strong>
+              {criticalArea}
+            </strong>
+
+            <small>
+              soil &lt; 25%
+            </small>
+
+          </article>
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          ENVIRONMENT + OPERATION
+          =================================================== */}
+
+      <section className="report-two-column">
+
+        <article className="report-block">
+
+          <div className="report-block-heading">
+
+            <div>
+
+              <span>
+                02 • ENVIRONMENT
+              </span>
+
+              <h2>
+                Kondisi Lingkungan
+              </h2>
+
+            </div>
+
+            <WeatherIcon
+              size={23}
+            />
+
+          </div>
+
+          <div className="report-environment-main">
+
+            <div
+              className={`report-weather-symbol ${
+                raining
+                  ? "rain"
+                  : "clear"
+              }`}
+            >
+              <WeatherIcon
+                size={38}
+              />
+            </div>
+
+            <div>
+
+              <span>
+                KONDISI CUACA
+              </span>
+
+              <strong>
+                {weatherStatus}
+              </strong>
+
+              <p>
+                {raining
+                  ? "Rain sensor sedang mendeteksi hujan."
+                  : "Rain sensor tidak mendeteksi hujan."}
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="report-env-row">
+
+            <div>
+
+              <Wind
+                size={18}
+              />
+
+              <span>
+                Kelembapan Udara
+              </span>
+
+            </div>
+
+            <strong>
+              {humidity}%
+            </strong>
+
+          </div>
+
+          <div className="report-env-row">
+
+            <div>
+
+              <Bot
+                size={18}
+              />
+
+              <span>
+                Status Override
+              </span>
+
+            </div>
+
+            <strong>
+              {raining
+                ? "AKTIF"
+                : "NONAKTIF"}
+            </strong>
+
+          </div>
+
+        </article>
+
+        <article className="report-block">
+
+          <div className="report-block-heading">
+
+            <div>
+
+              <span>
+                03 • OPERATION
+              </span>
+
+              <h2>
+                Performa Operasional
+              </h2>
+
+            </div>
+
+            <Gauge
+              size={23}
+            />
+
+          </div>
+
+          <div className="report-operation-list">
+
+            <div className="report-operation-item">
+
+              <div className="report-operation-icon green">
+                <Bot
+                  size={18}
+                />
               </div>
 
               <div>
-                <p>{label}</p>
-                <h2>{value}</h2>
-                <span>{caption}</span>
+
+                <span>
+                  Mode AUTO
+                </span>
+
+                <strong>
+                  {autoModeArea}
+                  {" "}
+                  Petak
+                </strong>
+
               </div>
-            </article>
-          )
-        )}
-      </section>
 
-      {/* ========================================
-          CHARTS
-      ======================================== */}
+              <small>
+                {totalPetak
+                  ? Math.round(
+                      (
+                        autoModeArea /
+                        totalPetak
+                      ) *
+                        100
+                    )
+                  : 0}
+                %
+              </small>
 
-      <section className="report-chart-grid">
-        <article className="report-panel">
-          <div className="report-panel-header">
-            <div>
-              <span className="report-section-label">
-                STATUS DISTRIBUTION
-              </span>
-
-              <h2>Distribusi Kondisi Lahan</h2>
-
-              <p>
-                Jumlah area normal, waspada, dan kritis.
-              </p>
             </div>
 
-            <RefreshCw size={20} />
+            <div className="report-operation-item">
+
+              <div className="report-operation-icon violet">
+                <Power
+                  size={18}
+                />
+              </div>
+
+              <div>
+
+                <span>
+                  Pompa Aktif
+                </span>
+
+                <strong>
+                  {activePump}
+                  {" "}
+                  Pompa
+                </strong>
+
+              </div>
+
+              <small>
+                {raining
+                  ? "Override"
+                  : "Normal"}
+              </small>
+
+            </div>
+
+            <div className="report-operation-item">
+
+              <div className="report-operation-icon blue">
+                <Droplets
+                  size={18}
+                />
+              </div>
+
+              <div>
+
+                <span>
+                  Soil Average
+                </span>
+
+                <strong>
+                  {avgSoilMoisture}%
+                </strong>
+
+              </div>
+
+              <small>
+                Overall
+              </small>
+
+            </div>
+
           </div>
 
-          <div className="report-donut-layout">
-            <div className="report-donut-wrapper">
-              <ResponsiveContainer width="100%" height={260}>
-                <PieChart>
-                  <Pie
-                    data={statusData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={66}
-                    outerRadius={99}
-                    paddingAngle={6}
-                    cornerRadius={14}
-                    stroke="none"
-                  >
-                    {statusData.map((item) => (
-                      <Cell
-                        fill={item.color}
-                        key={item.name}
-                      />
-                    ))}
-                  </Pie>
+        </article>
 
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+      </section>
 
-              <div className="report-donut-center">
-                <strong>{sensors.length}</strong>
-                <span>Total Petak</span>
-              </div>
+      {/* ===================================================
+          FIELD CONDITION + FINDINGS
+          =================================================== */}
+
+      <section className="report-two-column report-analysis-grid">
+
+        <article className="report-block">
+
+          <div className="report-block-heading">
+
+            <div>
+
+              <span>
+                04 • FIELD CONDITION
+              </span>
+
+              <h2>
+                Distribusi Kondisi Lahan
+              </h2>
+
             </div>
 
-            <div className="report-status-list">
-              {statusData.map((item) => (
-                <div className="report-status-item" key={item.name}>
-                  <span
-                    className="report-status-dot"
-                    style={{
-                      background: item.color,
-                    }}
-                  ></span>
+            <Sprout
+              size={23}
+            />
+
+          </div>
+
+          <div className="report-field-score">
+
+            <div>
+
+              <span>
+                NORMAL AREA
+              </span>
+
+              <strong>
+                {safePercentage}%
+              </strong>
+
+              <small>
+                dari seluruh petak
+              </small>
+
+            </div>
+
+            <div className="report-score-ring">
+
+              <span>
+                {normalArea}
+              </span>
+
+              <small>
+                normal
+              </small>
+
+            </div>
+
+          </div>
+
+          <div className="report-distribution">
+
+            <div className="normal">
+
+              <div>
+                <span />
+                Normal
+              </div>
+
+              <strong>
+                {normalArea}
+              </strong>
+
+            </div>
+
+            <div className="warning">
+
+              <div>
+                <span />
+                Waspada
+              </div>
+
+              <strong>
+                {warningArea}
+              </strong>
+
+            </div>
+
+            <div className="critical">
+
+              <div>
+                <span />
+                Kritis
+              </div>
+
+              <strong>
+                {criticalArea}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </article>
+
+        <article className="report-block report-findings">
+
+          <div className="report-block-heading">
+
+            <div>
+
+              <span>
+                05 • SYSTEM FINDINGS
+              </span>
+
+              <h2>
+                Temuan Otomatis
+              </h2>
+
+            </div>
+
+            <TrendingUp
+              size={23}
+            />
+
+          </div>
+
+          <div className="report-findings-list">
+
+            {findings.map(
+              (
+                finding,
+                index
+              ) => (
+                <div
+                  className={`report-finding ${finding.type}`}
+                  key={`${finding.title}-${index}`}
+                >
+
+                  <div className="report-finding-marker">
+
+                    {finding.type ===
+                    "critical" ? (
+                      <AlertTriangle
+                        size={16}
+                      />
+                    ) : finding.type ===
+                      "warning" ? (
+                      <AlertTriangle
+                        size={16}
+                      />
+                    ) : (
+                      <CheckCircle2
+                        size={16}
+                      />
+                    )}
+
+                  </div>
 
                   <div>
-                    <strong>{item.value}</strong>
-                    <p>{item.name}</p>
+
+                    <strong>
+                      {finding.title}
+                    </strong>
+
+                    <p>
+                      {finding.description}
+                    </p>
+
                   </div>
+
                 </div>
-              ))}
-            </div>
+              )
+            )}
+
           </div>
+
         </article>
 
-        <article className="report-panel">
-          <div className="report-panel-header">
-            <div>
-              <span className="report-section-label">
-                DEVICE MONITORING
-              </span>
+      </section>
 
-              <h2>Status Perangkat Aktif</h2>
+      {/* ===================================================
+          DATA TABLE
+          =================================================== */}
 
-              <p>
-                Jumlah aktuator yang sedang aktif pada sistem.
-              </p>
-            </div>
+      <section className="report-record-section">
 
-            <Bot size={20} />
+        <div className="report-record-header">
+
+          <div>
+
+            <span>
+              06 • SENSOR RECORD
+            </span>
+
+            <h2>
+              Detail Data Setiap Petak
+            </h2>
+
+            <p>
+              Data snapshot terbaru
+              sensor tanah dan sistem
+              kontrol irigasi.
+            </p>
+
           </div>
 
-          <ResponsiveContainer width="100%" height={275}>
-            <BarChart
-              data={deviceData}
-              margin={{
-                top: 18,
-                right: 8,
-                left: -16,
-                bottom: 0,
-              }}
+          <div className="report-record-tools">
+
+            <span>
+              <FileSpreadsheet
+                size={16}
+              />
+
+              {sensors.length}
+              {" "}
+              records
+            </span>
+
+            <button
+              type="button"
+              onClick={
+                exportCSV
+              }
+              disabled={
+                !sensors.length
+              }
             >
-              <defs>
-                <linearGradient
-                  id="reportDeviceGradient"
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="0%" stopColor="#22c55e" />
-                  <stop offset="100%" stopColor="#15803d" />
-                </linearGradient>
-              </defs>
-
-              <CartesianGrid
-                strokeDasharray="4 6"
-                vertical={false}
-                stroke="#e2e8f0"
+              <Download
+                size={15}
               />
 
-              <XAxis
-                dataKey="name"
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              />
+              CSV
+            </button>
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={{
-                  fill: "#64748b",
-                  fontSize: 12,
-                }}
-              />
-
-              <Tooltip
-                cursor={{
-                  fill: "rgba(34, 197, 94, 0.08)",
-                }}
-              />
-
-              <Bar
-                dataKey="value"
-                fill="url(#reportDeviceGradient)"
-                radius={[12, 12, 4, 4]}
-                barSize={48}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </article>
-      </section>
-
-      {/* ========================================
-          STATISTIK SENSOR
-      ======================================== */}
-
-      <section className="report-panel report-statistics-panel">
-        <div className="report-panel-header">
-          <div>
-            <span className="report-section-label">
-              SENSOR STATISTICS
-            </span>
-
-            <h2>Statistik Sensor Keseluruhan</h2>
-
-            <p>
-              Nilai minimum, rata-rata, dan maksimum dari seluruh petak.
-            </p>
           </div>
 
-          <Database size={20} />
-        </div>
-
-        <div className="report-statistics-grid">
-          <article>
-            <div className="report-statistics-icon soil">
-              <Droplets size={20} />
-            </div>
-
-            <div>
-              <span>Kelembaban Tanah</span>
-
-              <strong>
-                {getAverage(sensors, "soil_moisture")}%
-              </strong>
-
-              <p>
-                Min {getMinimum(sensors, "soil_moisture")}% • Maks{" "}
-                {getMaximum(sensors, "soil_moisture")}%
-              </p>
-            </div>
-          </article>
-
-          <article>
-            <div className="report-statistics-icon temperature">
-              <Thermometer size={20} />
-            </div>
-
-            <div>
-              <span>Suhu Petak</span>
-
-              <strong>
-                {getAverage(sensors, "temperature")}°C
-              </strong>
-
-              <p>
-                Min {getMinimum(sensors, "temperature")}°C • Maks{" "}
-                {getMaximum(sensors, "temperature")}°C
-              </p>
-            </div>
-          </article>
-
-          <article>
-            <div className="report-statistics-icon humidity">
-              <Wind size={20} />
-            </div>
-
-            <div>
-              <span>Kelembaban Udara</span>
-
-              <strong>
-                {getAverage(sensors, "humidity")}%
-              </strong>
-
-              <p>
-                Min {getMinimum(sensors, "humidity")}% • Maks{" "}
-                {getMaximum(sensors, "humidity")}%
-              </p>
-            </div>
-          </article>
-
-          <article>
-            <div className="report-statistics-icon light">
-              <Lightbulb size={20} />
-            </div>
-
-            <div>
-              <span>Intensitas Cahaya</span>
-
-              <strong>
-                {getAverage(sensors, "light")} lux
-              </strong>
-
-              <p>
-                Min {getMinimum(sensors, "light")} lux • Maks{" "}
-                {getMaximum(sensors, "light")} lux
-              </p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      {/* ========================================
-          TABLE REPORT
-      ======================================== */}
-
-      <section className="report-panel report-table-panel">
-        <div className="report-panel-header">
-          <div>
-            <span className="report-section-label">
-              DETAILED REPORT
-            </span>
-
-            <h2>Detail Kondisi Setiap Petak</h2>
-
-            <p>
-              Data sensor, status perangkat, serta rekomendasi sistem.
-            </p>
-          </div>
-
-          <ClipboardList size={21} />
         </div>
 
         <div className="report-table-wrapper">
-          <table>
+
+          <table className="report-table">
+
             <thead>
+
               <tr>
-                <th>Petak</th>
-                <th>Suhu</th>
-                <th>Tanah</th>
-                <th>Udara</th>
-                <th>Cahaya</th>
-                <th>Pompa</th>
-                <th>Kipas</th>
-                <th>Lampu</th>
-                <th>Mode</th>
-                <th>Status</th>
-                <th>Rekomendasi</th>
+                <th>#</th>
+                <th>PETAK</th>
+                <th>SOIL</th>
+                <th>KONDISI TANAH</th>
+                <th>POMPA</th>
+                <th>MODE</th>
+                <th>STATUS</th>
               </tr>
+
             </thead>
 
             <tbody>
-              {sensors.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <strong>{item.area}</strong>
-                  </td>
 
-                  <td>{item.temperature}°C</td>
-                  <td>{item.soil_moisture}%</td>
-                  <td>{item.humidity}%</td>
-                  <td>{item.light} lux</td>
+              {sensors.map(
+                (
+                  item,
+                  index
+                ) => {
+                  const statusClass =
+                    getGlobalStatusClass(
+                      item
+                    );
 
-                  <td>
-                    <span
-                      className={`report-device-pill ${
-                        item.pump_status === "ON"
-                          ? "on"
-                          : "off"
-                      }`}
+                  const statusLabel =
+                    getGlobalStatusLabel(
+                      item
+                    );
+
+                  const soilCondition =
+                    getSoilCondition(
+                      item
+                    );
+
+                  const soil =
+                    Number(
+                      item?.soil_moisture ??
+                        0
+                    );
+
+                  const pumpOn =
+                    String(
+                      item?.pump_status ||
+                        ""
+                    ).toUpperCase() ===
+                    "ON";
+
+                  const autoMode =
+                    String(
+                      item?.control_mode ||
+                        ""
+                    ).toUpperCase() ===
+                    "AUTO";
+
+                  return (
+                    <tr
+                      key={
+                        item.id
+                      }
                     >
-                      {item.pump_status || "OFF"}
-                    </span>
-                  </td>
 
-                  <td>
-                    <span
-                      className={`report-device-pill ${
-                        item.fan_status === "ON"
-                          ? "on"
-                          : "off"
-                      }`}
-                    >
-                      {item.fan_status || "OFF"}
-                    </span>
-                  </td>
+                      <td className="report-index">
+                        {String(
+                          index + 1
+                        ).padStart(
+                          2,
+                          "0"
+                        )}
+                      </td>
 
-                  <td>
-                    <span
-                      className={`report-device-pill ${
-                        item.lamp_status === "ON"
-                          ? "on"
-                          : "off"
-                      }`}
-                    >
-                      {item.lamp_status || "OFF"}
-                    </span>
-                  </td>
+                      <td>
 
-                  <td>
-                    <span
-                      className={`report-mode-pill ${
-                        item.control_mode === "AUTO"
-                          ? "auto"
-                          : "manual"
-                      }`}
-                    >
-                      {item.control_mode || "MANUAL"}
-                    </span>
-                  </td>
+                        <div className="report-plot-name">
 
-                  <td>
-                    <span
-                      className={`report-status-pill ${getGlobalStatusClass(
-                        item
-                      )}`}
-                    >
-                      {getGlobalStatusLabel(item)}
-                    </span>
-                  </td>
+                          <span />
 
-                  <td className="report-recommendation-cell">
-                    {getRecommendation(item)}
-                  </td>
-                </tr>
-              ))}
+                          <strong>
+                            {item.area}
+                          </strong>
 
-              {sensors.length === 0 && (
-                <tr>
-                  <td
-                    className="report-empty-state"
-                    colSpan="11"
-                  >
-                    Data sensor belum tersedia.
-                  </td>
-                </tr>
+                        </div>
+
+                      </td>
+
+                      <td>
+
+                        <div className="report-soil">
+
+                          <Droplets
+                            size={14}
+                          />
+
+                          <strong>
+                            {soil}%
+                          </strong>
+
+                        </div>
+
+                      </td>
+
+                      <td>
+                        {soilCondition}
+                      </td>
+
+                      <td>
+
+                        <span
+                          className={`report-pill pump ${
+                            pumpOn
+                              ? "on"
+                              : "off"
+                          }`}
+                        >
+                          {pumpOn
+                            ? "ON"
+                            : "OFF"}
+                        </span>
+
+                      </td>
+
+                      <td>
+
+                        <span
+                          className={`report-pill mode ${
+                            autoMode
+                              ? "auto"
+                              : "manual"
+                          }`}
+                        >
+                          {autoMode
+                            ? "AUTO"
+                            : "MANUAL"}
+                        </span>
+
+                      </td>
+
+                      <td>
+
+                        <span
+                          className={`report-status ${statusClass}`}
+                        >
+                          {statusLabel}
+                        </span>
+
+                      </td>
+
+                    </tr>
+                  );
+                }
               )}
+
             </tbody>
+
           </table>
+
         </div>
+
       </section>
 
-      {/* ========================================
-          FOOTER REPORT
-      ======================================== */}
+      {/* ===================================================
+          REPORT FOOTER INFORMATION
+          =================================================== */}
 
-      <section className="report-footer">
-        <div>
-          <CheckCircle size={20} />
+      <section className="report-notes">
 
-          <p>
-            Laporan dibuat berdasarkan data monitoring terbaru dari
-            database Supabase.
-          </p>
+        <div className="report-notes-heading">
+
+          <ClipboardList
+            size={21}
+          />
+
+          <div>
+
+            <span>
+              07 • REPORT NOTES
+            </span>
+
+            <h2>
+              Informasi Laporan
+            </h2>
+
+          </div>
+
         </div>
+
+        <div className="report-notes-grid">
+
+          <div>
+
+            <Database
+              size={17}
+            />
+
+            <div>
+
+              <strong>
+                Sumber Data
+              </strong>
+
+              <p>
+                Supabase database melalui
+                backend Smart Farming.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div>
+
+            <CloudRain
+              size={17}
+            />
+
+            <div>
+
+              <strong>
+                Rain Override
+              </strong>
+
+              <p>
+                Hujan terdeteksi berarti
+                seluruh pompa OFF.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div>
+
+            <Droplets
+              size={17}
+            />
+
+            <div>
+
+              <strong>
+                Auto Irrigation
+              </strong>
+
+              <p>
+                CERAH + soil &lt;25%
+                menyalakan pompa AUTO.
+              </p>
+
+            </div>
+
+          </div>
+
+          <div>
+
+            <CalendarDays
+              size={17}
+            />
+
+            <div>
+
+              <strong>
+                Snapshot
+              </strong>
+
+              <p>
+                {reportDate},
+                {" "}
+                {reportTime}
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <footer className="report-footer">
 
         <span>
-          Generated: {new Date().toLocaleString("id-ID")}
+          Smart Farming IoT Monitoring Report
         </span>
-      </section>
+
+        <strong>
+          {reportDate}
+        </strong>
+
+      </footer>
+
     </main>
   );
 }

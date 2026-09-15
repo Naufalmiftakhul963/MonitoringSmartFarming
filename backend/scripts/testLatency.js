@@ -54,10 +54,10 @@ async function runLatencyTest() {
   let failedCount = 0;
 
   for (let index = 1; index <= totalData; index++) {
-    // Waktu ketika data dummy dianggap dibaca oleh sensor.
+    // Waktu ketika data dianggap dibaca oleh sensor.
     const acquisitionTime = new Date().toISOString();
     
-    const dummySensor = {
+    const sensorData = {
       test_batch: batchName,
       sequence_number: index,
       area: `Petak ${(index % 8) + 1}`,
@@ -74,7 +74,7 @@ async function runLatencyTest() {
 
     const { data, error } = await supabase
       .from("sensor_latency_test")
-      .insert(dummySensor)
+      .insert(sensorData)
       .select()
       .single();
 

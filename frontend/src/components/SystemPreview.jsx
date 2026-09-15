@@ -7,10 +7,10 @@ function SystemPreview() {
   const steps = [
     {
       id: "iot",
-      title: "IoT Dummy",
-      subtitle: "Simulasi sensor",
+      title: "IoT Sensor",
+      subtitle: "Sensor monitoring",
       icon: Activity,
-      desc: "Data suhu, kelembaban tanah, cahaya, dan status pompa dibuat sebagai data dummy sensor IoT.",
+      desc: "Data suhu, kelembaban tanah, cahaya, dan status pompa diperoleh dari sensor IoT.",
       items: ["Temperature", "Soil Moisture", "Light Sensor", "Pump Status"],
     },
     {

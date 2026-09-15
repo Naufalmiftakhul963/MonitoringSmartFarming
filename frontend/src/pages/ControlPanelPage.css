@@ -1,0 +1,929 @@
+/* =========================================================
+   CONTROL PAGE
+   ========================================================= */
+
+.control-shell {
+  width: min(100% - 44px, 1560px);
+  margin: 0 auto;
+  padding: 112px 0 60px;
+  color: #102018;
+  color-scheme: light;
+}
+
+.control-shell * {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.control-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 32px;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #064e3b,
+      #15803d 55%,
+      #22c55e
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 22px 44px
+    rgba(21, 128, 61, 0.2);
+}
+
+.control-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.2);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.control-hero h1 {
+  margin: 14px 0 9px;
+
+  font-size:
+    clamp(
+      34px,
+      4vw,
+      54px
+    );
+
+  line-height: 1;
+}
+
+.control-hero p {
+  max-width: 720px;
+
+  margin: 0;
+
+  color:
+    rgba(255, 255, 255, 0.85);
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.control-hero-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 190px;
+
+  padding: 16px 18px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.22);
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.12);
+
+  backdrop-filter: blur(12px);
+}
+
+.control-hero-status span {
+  display: block;
+
+  color:
+    rgba(255, 255, 255, 0.76);
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.control-hero-status strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #ffffff;
+
+  font-size: 20px;
+}
+
+/* =========================================================
+   GLOBAL ENVIRONMENT
+   ========================================================= */
+
+.control-global-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 18px;
+
+  margin-top: 22px;
+}
+
+.control-global-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  min-width: 0;
+
+  padding: 22px;
+
+  border: 1px solid #dfe9e2;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 30px
+    rgba(22, 101, 52, 0.06);
+}
+
+.control-global-card.clear {
+  border-color: #bbf7d0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0fdf4,
+      #ffffff
+    );
+}
+
+.control-global-card.rain {
+  border-color: #bae6fd;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0f9ff,
+      #ffffff
+    );
+}
+
+.control-global-card.humidity {
+  background:
+    linear-gradient(
+      135deg,
+      #ecfeff,
+      #ffffff
+    );
+}
+
+.control-global-card-icon {
+  display: grid;
+
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  place-items: center;
+
+  border-radius: 16px;
+
+  color: #15803d;
+
+  background: #dcfce7;
+}
+
+.control-global-card.rain
+.control-global-card-icon {
+  color: #0284c7;
+
+  background: #e0f2fe;
+}
+
+.control-global-card.humidity
+.control-global-card-icon {
+  color: #0891b2;
+
+  background: #cffafe;
+}
+
+.control-global-card-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.control-global-card-content > span {
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.control-global-card-content > strong {
+  display: block;
+
+  margin: 4px 0;
+
+  color: #12261a;
+
+  font-size: 26px;
+}
+
+.control-global-card-content p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   RAIN BUTTON
+   ========================================================= */
+
+.control-rain-button {
+  flex-shrink: 0;
+
+  padding: 10px 13px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.control-rain-button.to-rain {
+  color: #0369a1;
+
+  background: #e0f2fe;
+}
+
+.control-rain-button.to-clear {
+  color: #166534;
+
+  background: #dcfce7;
+}
+
+/* =========================================================
+   HUMIDITY RANGE
+   ========================================================= */
+
+.control-humidity-control {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+.control-humidity-control input {
+  width: 100%;
+
+  accent-color: #0891b2;
+}
+
+.control-humidity-control span {
+  min-width: 46px;
+
+  padding: 5px 8px;
+
+  border-radius: 9px;
+
+  color: #0e7490;
+
+  background: #cffafe;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  text-align: center;
+}
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.control-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 15px;
+
+  margin: 22px 0;
+}
+
+.control-summary-card {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 18px;
+
+  border: 1px solid #e1ebe4;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 12px 27px
+    rgba(22, 101, 52, 0.05);
+}
+
+.control-summary-icon {
+  display: grid;
+
+  width: 48px;
+  height: 48px;
+
+  place-items: center;
+
+  border-radius: 14px;
+}
+
+.control-summary-icon.green {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.control-summary-icon.lime {
+  color: #4d7c0f;
+  background: #ecfccb;
+}
+
+.control-summary-icon.red {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+.control-summary-card span {
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.control-summary-card strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #12261a;
+
+  font-size: 24px;
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.control-section,
+.control-auto-panel {
+  padding: 23px;
+
+  border: 1px solid #dfe9e2;
+
+  border-radius: 25px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 15px 34px
+    rgba(22, 101, 52, 0.06);
+}
+
+.control-auto-panel {
+  margin-bottom: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7fef9,
+      #ffffff
+    );
+}
+
+.control-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+.control-section-heading > div > span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #16a34a;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 1.3px;
+}
+
+.control-section-heading h2 {
+  margin: 0;
+
+  color: #12261a;
+
+  font-size: 23px;
+}
+
+.control-section-heading p {
+  max-width: 720px;
+
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.control-section-heading > button {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  flex-shrink: 0;
+
+  padding: 10px 13px;
+
+  border: 0;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+
+  background: #15803d;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   RULE GRID
+   ========================================================= */
+
+.control-rule-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 13px;
+
+  margin-top: 20px;
+}
+
+.control-rule-card {
+  padding: 16px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+}
+
+.control-rule-card.rain {
+  color: #0369a1;
+
+  border-color: #bae6fd;
+
+  background: #f0f9ff;
+}
+
+.control-rule-card.dry {
+  color: #166534;
+
+  border-color: #bbf7d0;
+
+  background: #f0fdf4;
+}
+
+.control-rule-card.safe {
+  color: #4d7c0f;
+
+  border-color: #d9f99d;
+
+  background: #f7fee7;
+}
+
+.control-rule-card span {
+  display: block;
+
+  margin-top: 8px;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.control-rule-card strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #12261a;
+
+  font-size: 18px;
+}
+
+/* =========================================================
+   PETAK GRID
+   ========================================================= */
+
+.control-plot-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 16px;
+
+  margin-top: 22px;
+}
+
+.control-plot-card {
+  padding: 18px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #fbfefc
+    );
+
+  box-shadow:
+    0 10px 24px
+    rgba(15, 23, 42, 0.04);
+}
+
+.control-plot-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.control-plot-header span {
+  color: #94a3b8;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+.control-plot-header h3 {
+  margin: 3px 0 0;
+
+  color: #12261a;
+
+  font-size: 20px;
+}
+
+.control-mode-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 6px 9px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.control-mode-badge.auto {
+  color: #4d7c0f;
+
+  background: #ecfccb;
+}
+
+.control-mode-badge.manual {
+  color: #7c3aed;
+
+  background: #ede9fe;
+}
+
+/* =========================================================
+   SOIL
+   ========================================================= */
+
+.control-plot-soil {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 17px 0;
+
+  padding: 14px;
+
+  border-radius: 15px;
+
+  background: #f8faf9;
+}
+
+.control-plot-soil-icon {
+  display: grid;
+
+  width: 42px;
+  height: 42px;
+
+  place-items: center;
+
+  border-radius: 13px;
+
+  color: #2563eb;
+
+  background: #dbeafe;
+}
+
+.control-plot-soil span {
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.control-plot-soil strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #12261a;
+
+  font-size: 22px;
+}
+
+.control-plot-soil p {
+  margin: 2px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+/* =========================================================
+   PUMP STATUS
+   ========================================================= */
+
+.control-plot-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 11px 0;
+
+  border-top: 1px solid #edf2ef;
+  border-bottom: 1px solid #edf2ef;
+}
+
+.control-plot-status span {
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.control-plot-status strong {
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.control-plot-status strong.on {
+  color: #166534;
+
+  background: #dcfce7;
+}
+
+.control-plot-status strong.off {
+  color: #64748b;
+
+  background: #f1f5f9;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.control-plot-actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.control-plot-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  min-height: 40px;
+
+  padding: 8px;
+
+  border: 0;
+
+  border-radius: 11px;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.control-mode-button {
+  color: #4d7c0f;
+
+  background: #ecfccb;
+}
+
+.control-pump-button.on {
+  color: #166534;
+
+  background: #dcfce7;
+}
+
+.control-pump-button.off {
+  color: #b91c1c;
+
+  background: #fee2e2;
+}
+
+.control-plot-actions button:disabled {
+  opacity: 0.48;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.control-plot-note {
+  margin: 10px 0 0;
+
+  color: #64748b;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.control-plot-note.rain {
+  color: #0369a1;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+  .control-plot-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+}
+
+@media (max-width: 900px) {
+  .control-global-grid,
+  .control-summary-grid,
+  .control-rule-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .control-hero-status {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .control-shell {
+    width:
+      min(
+        100% - 24px,
+        1560px
+      );
+
+    padding-top: 100px;
+  }
+
+  .control-plot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-section-heading {
+    flex-direction: column;
+  }
+
+  .control-section-heading > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .control-global-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .control-rain-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .control-shell {
+    width:
+      min(
+        100% - 18px,
+        1560px
+      );
+  }
+
+  .control-hero {
+    padding: 24px 20px;
+  }
+
+  .control-section,
+  .control-auto-panel {
+    padding: 18px;
+  }
+
+  .control-plot-actions {
+    grid-template-columns: 1fr;
+  }
+}

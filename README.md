@@ -209,7 +209,7 @@ cd MonitoringSmartFarming
 | `lamp_status` | text | Status lampu ("ON" / "OFF") |
 | `control_mode` | text | Mode kontrol ("MANUAL" / "AUTO") |
 
-3. Isi dengan data dummy (contoh 8 petak lahan)
+3. Isi dengan data awal sensor (contoh 8 petak lahan)
 
 ### Langkah 3 — Setup Backend
 

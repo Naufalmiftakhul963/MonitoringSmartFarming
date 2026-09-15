@@ -16,7 +16,7 @@ function HomePage() {
 
           <p>
             Sistem ini digunakan untuk memantau kondisi lahan pertanian melalui
-            data dummy sensor IoT yang disimpan di Supabase, diproses oleh
+            data sensor IoT yang disimpan di Database, diproses oleh
             backend Node.js Express, dan ditampilkan menggunakan React Vite.
           </p>
 
@@ -47,7 +47,7 @@ function HomePage() {
           <h2>Visualisasi Sistem Smart Farming</h2>
 
           <p>
-            Halaman ini menjelaskan alur kerja sistem, mulai dari data dummy IoT,
+            Halaman ini menjelaskan alur kerja sistem, mulai dari data sensor IoT,
             penyimpanan Supabase, backend Express, sampai visualisasi dashboard
             React.
           </p>
@@ -55,7 +55,7 @@ function HomePage() {
           <div className="showcase-stats">
             <div>
               <strong>IoT</strong>
-              <span>Dummy Sensor</span>
+              <span>Sensor IoT</span>
             </div>
 
             <div>
@@ -80,14 +80,14 @@ function HomePage() {
       <section className="feature-grid">
         <div className="feature-card">
           <Droplets size={28} />
-          <h3>Monitoring Kelembaban</h3>
+          <h3>Monitoring Kelembaban Tanah</h3>
           <p>Menampilkan kelembaban tanah tiap petak lahan secara visual.</p>
         </div>
 
         <div className="feature-card">
           <Thermometer size={28} />
-          <h3>Monitoring Suhu</h3>
-          <p>Memantau suhu area lahan berdasarkan data sensor dummy.</p>
+          <h3>Monitoring Kelembapan Udara</h3>
+          <p>Memantau cuaca area lahan berdasarkan data sensor.</p>
         </div>
 
         <div className="feature-card">
@@ -98,8 +98,8 @@ function HomePage() {
 
         <div className="feature-card">
           <Database size={28} />
-          <h3>Database Supabase</h3>
-          <p>Data dummy sensor disimpan di database Supabase PostgreSQL.</p>
+          <h3>Database</h3>
+          <p>Data sensor disimpan di database Supabase PostgreSQL.</p>
         </div>
       </section>
     </div>

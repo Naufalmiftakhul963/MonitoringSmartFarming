@@ -993,6 +993,53 @@ tr:hover td {
   color: #ecfdf5;
 }
 
+.control-weather-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-radius: 22px;
+  background: white;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.control-weather-icon {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+}
+
+.control-weather-icon.sunny {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.control-weather-icon.rain {
+  color: #0284c7;
+  background: #e0f2fe;
+}
+
+.control-weather-card h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.control-weather-card h3 strong {
+  color: #0284c7;
+}
+
+.control-weather-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
 /* DATA SENSOR */
 .toolbar {
   display: flex;
