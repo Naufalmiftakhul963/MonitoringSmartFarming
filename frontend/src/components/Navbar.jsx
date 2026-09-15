@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import {
   Sprout,
   Settings,
@@ -6,48 +7,83 @@ import {
   Info,
   LayoutDashboard,
   FileText,
+  Sparkles,
 } from "lucide-react";
 
 function Navbar() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTime(
+        now.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      );
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <nav className="navbar">
-      <div className="brand">
+      {/* BRAND LOGO */}
+      <Link to="/" className="brand">
         <div className="brand-icon-wrap">
-          <Sprout size={22} />
+          <Sprout size={22} className="sprout-icon" />
+          <Sparkles size={13} className="brand-sparkle" />
         </div>
-        <span>SmartFarm</span>
-      </div>
+        <div className="brand-text-wrap">
+          <span className="brand-title">SmartFarm</span>
+          <span className="brand-tag">IoT SYSTEM</span>
+        </div>
+      </Link>
 
+      {/* CENTER NAV LINKS */}
       <div className="nav-links">
-        <NavLink to="/">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
           <HomeIcon size={16} />
-          Home
+          <span>Home</span>
+          <span className="hover-dot" />
         </NavLink>
 
-        <NavLink to="/dashboard">
+        <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
           <LayoutDashboard size={16} />
-          Dashboard
+          <span>Dashboard</span>
+          <span className="hover-dot" />
         </NavLink>
 
-        <NavLink to="/control">
+        <NavLink to="/control" className={({ isActive }) => (isActive ? "active" : "")}>
           <Settings size={16} />
-          Control Panel
+          <span>Control Panel</span>
+          <span className="hover-dot" />
         </NavLink>
 
-        <NavLink to="/report">
+        <NavLink to="/report" className={({ isActive }) => (isActive ? "active" : "")}>
           <FileText size={16} />
-          Report
+          <span>Report</span>
+          <span className="hover-dot" />
         </NavLink>
 
-        <NavLink to="/about">
+        <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>
           <Info size={16} />
-          About
+          <span>About</span>
+          <span className="hover-dot" />
         </NavLink>
       </div>
 
-      <div className="nav-live">
-        <span className="nav-live-dot" />
-        <span className="nav-live-txt">Live</span>
+      {/* RIGHT STATUS WIDGET */}
+      <div className="nav-right-widget">
+        <div className="status-chip" title="Sistem IoT Terhubung & Real-Time">
+          <span className="status-dot" />
+          <span className="status-label">IoT Online</span>
+          <span className="status-divider">•</span>
+          <span className="status-clock">{time || "REALTIME"}</span>
+        </div>
       </div>
     </nav>
   );

@@ -1,366 +1,646 @@
-# 🌾 Smart Farming IoT Monitoring System
+# 🌱 Smart Farming IoT Monitoring System
 
 <div align="center">
 
-**Sistem monitoring lahan pertanian berbasis IoT dengan visualisasi data real-time, model 3D interaktif, dan kontrol aktuator otomatis.**
+### Sistem Monitoring dan Kontrol Irigasi Pertanian Berbasis IoT
 
-[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
-[![Express](https://img.shields.io/badge/Express-5.2-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![Three.js](https://img.shields.io/badge/Three.js-0.184-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
+Monitoring **11 petak lahan**, kontrol pompa otomatis,  
+rain sensor dan humidity global, visualisasi 2D/3D, serta laporan data dalam satu platform.
+
+<br />
+
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-Build_Tool-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Express](https://img.shields.io/badge/Express-Backend-000000?style=for-the-badge&logo=express&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-3D_Visualization-000000?style=for-the-badge&logo=threedotjs&logoColor=white)
 
 </div>
 
 ---
 
-## Tentang Proyek
+## 📌 Tentang Proyek
 
-**Smart Farming IoT Monitoring System** adalah aplikasi web full-stack yang dirancang untuk memantau kondisi lahan pertanian secara real-time. Sistem ini mensimulasikan penggunaan sensor IoT pada beberapa petak lahan pertanian, di mana data sensor (suhu, kelembaban tanah, kelembaban udara, intensitas cahaya) dan status perangkat (pompa, kipas, lampu, mode kontrol) disimpan di **Supabase** (cloud database), diproses melalui **backend Express.js**, dan divisualisasikan di **frontend React + Vite** dengan tampilan dashboard interaktif dan model 3D.
+**Smart Farming IoT Monitoring System** adalah aplikasi web full-stack yang dirancang untuk membantu proses monitoring kondisi lahan dan pengelolaan sistem irigasi pertanian.
 
-### Tujuan Proyek
+Sistem memantau **11 petak lahan** secara individual menggunakan nilai **soil moisture**, sementara kondisi lingkungan seperti **rain sensor** dan **kelembapan udara (humidity)** berlaku secara global untuk seluruh area pertanian.
 
-- Memonitor kondisi lahan pertanian secara real-time melalui dashboard berbasis web
-- Menyediakan visualisasi data sensor dalam bentuk grafik, tabel, dan model 3D interaktif
-- Memberikan rekomendasi otomatis berdasarkan kondisi sensor (decision support)
-- Mengendalikan aktuator (pompa irigasi, kipas ventilasi, lampu tanaman) secara remote dan otomatis
-- Menghasilkan laporan kondisi lahan untuk keperluan analisis
+Data disimpan menggunakan **Supabase PostgreSQL**, diproses melalui REST API berbasis **Node.js + Express**, kemudian ditampilkan pada frontend **React + Vite**.
+
+Sistem juga menyediakan visualisasi lahan dalam bentuk **2D Monitoring View** dan **3D Interactive Smart Farm** menggunakan Three.js.
 
 ---
 
-## Tech Stack
+## 🎯 Tujuan Sistem
 
-### Frontend
-| Teknologi | Versi | Fungsi |
-|-----------|-------|--------|
-| **React** | 19.2 | Library UI untuk membangun antarmuka pengguna |
-| **Vite** | 8.0 | Build tool & dev server yang cepat |
-| **React Router DOM** | 7.15 | Navigasi antar halaman (SPA routing) |
-| **Recharts** | 3.8 | Visualisasi data dalam bentuk grafik (Line, Bar, Pie) |
-| **Three.js** | 0.184 | Rendering model 3D interaktif lahan pertanian |
-| **Axios** | 1.16 | HTTP client untuk komunikasi dengan backend API |
-| **Lucide React** | 1.16 | Ikon modern untuk antarmuka |
-| **CSS** | - | Styling kustom (tanpa framework CSS) |
+Proyek ini dibuat untuk:
 
-### Backend
-| Teknologi | Versi | Fungsi |
-|-----------|-------|--------|
-| **Node.js** | - | Runtime JavaScript di sisi server |
-| **Express.js** | 5.2 | Framework web untuk membuat REST API |
-| **Supabase JS** | 2.106 | Client SDK untuk mengakses database Supabase |
-| **dotenv** | 17.4 | Mengelola environment variables |
-| **CORS** | 2.8 | Middleware untuk mengizinkan cross-origin requests |
-| **Nodemon** | 3.1 | Auto-restart server saat development |
-
-### Database
-| Teknologi | Fungsi |
-|-----------|--------|
-| **Supabase (PostgreSQL)** | Cloud database untuk menyimpan data sensor IoT |
+- Memantau kelembapan tanah pada setiap petak lahan.
+- Mengetahui kondisi lingkungan pertanian secara global.
+- Mengontrol pompa irigasi menggunakan mode AUTO atau MANUAL.
+- Menghindari penyiraman yang tidak diperlukan ketika hujan.
+- Memberikan informasi kondisi petak seperti Normal, Waspada, dan Kritis.
+- Menampilkan kondisi lahan melalui dashboard 2D dan model 3D interaktif.
+- Menyediakan laporan monitoring yang dapat diekspor ke CSV.
 
 ---
 
-## Alur Kerja Sistem (Flowchart)
+# ✨ Fitur Utama
 
-```mermaid
-flowchart TD
-    A["Sensor IoT di Lahan<br/>(Suhu, Kelembaban, Cahaya)"] -->|Kirim Data| B["Supabase Database<br/>(PostgreSQL Cloud)"]
-    
-    B -->|Query Data| C["Backend Express.js<br/>(localhost:5000)"]
-    
-    C -->|REST API Response| D["Frontend React + Vite<br/>(localhost:5173)"]
-    
-    D --> E{"Halaman Dashboard"}
-    D --> F{"Control Panel"}
-    D --> G{"Report Page"}
-    D --> H{"About Page"}
-    
-    E --> E1["Grafik Sensor<br/>(Recharts)"]
-    E --> E2["Model 3D Lahan<br/>(Three.js)"]
-    E --> E3["Tabel Data Sensor"]
-    E --> E4["Alert & Rekomendasi"]
-    E --> E5["Distribusi Status<br/>(Pie Chart)"]
-    
-    F -->|Toggle Perangkat| C
-    C -->|PUT /api/...| B
-    B -->|Update Status| A
-    
-    style A fill:#22c55e,stroke:#16a34a,color:#fff
-    style B fill:#3ECF8E,stroke:#2da672,color:#fff
-    style C fill:#1e293b,stroke:#334155,color:#fff
-    style D fill:#61DAFB,stroke:#0ea5e9,color:#000
-    style E fill:#f0fdf4,stroke:#22c55e,color:#064e3b
-    style F fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    style G fill:#ede9fe,stroke:#8b5cf6,color:#4c1d95
-    style H fill:#f1f5f9,stroke:#64748b,color:#1e293b
+## 🌱 Monitoring 11 Petak
+
+Setiap petak memiliki data:
+
+- Soil moisture
+- Status pompa
+- Mode kontrol
+- Status kondisi tanah
+
+Status kondisi tanah:
+
+| Soil Moisture | Status |
+|---|---|
+| `< 25%` | 🔴 Kritis |
+| `25% - 39%` | 🟡 Waspada |
+| `>= 40%` | 🟢 Normal |
+
+---
+
+## 🌧️ Global Environment Monitoring
+
+Kondisi lingkungan berlaku untuk seluruh area Smart Farming.
+
+Data global yang digunakan:
+
+- **Rain Sensor**
+- **Humidity**
+- **Weather Status**
+
+Status cuaca:
+
+```text
+rain_detected = true
+→ HUJAN
+
+rain_detected = false
+→ CERAH
 ```
 
-### Alur Detail
+Humidity hanya digunakan sebagai informasi monitoring dan **tidak menentukan status hujan ataupun kontrol pompa**.
 
-```mermaid
-sequenceDiagram
-    participant User as User (Browser)
-    participant FE as Frontend<br/>(React + Vite)
-    participant BE as Backend<br/>(Express.js)
-    participant DB as Supabase<br/>(PostgreSQL)
+---
 
-    Note over User,DB: 📡 Alur Pengambilan Data Sensor
-    User->>FE: Buka Dashboard
-    FE->>BE: GET /api/sensors
-    BE->>DB: SELECT * FROM sensor_data
-    DB-->>BE: Return sensor data
-    BE-->>FE: JSON response
-    FE-->>User: Render Dashboard + Grafik + 3D Model
+## 💧 Smart Irrigation
 
-    Note over User,DB: Auto Refresh (setiap 60 detik)
-    loop Setiap 60 detik
-        FE->>BE: GET /api/sensors
-        FE->>BE: GET /api/summary
-        BE->>DB: Query data
-        DB-->>BE: Return data
-        BE-->>FE: JSON response
-        FE-->>User: Update tampilan
-    end
+Sistem mendukung dua mode kontrol:
 
-    Note over User,DB: Kontrol Perangkat
-    User->>FE: Klik Toggle Perangkat
-    FE->>BE: PUT /api/[device]/:id
-    BE->>DB: UPDATE sensor_data SET [device]_status
-    DB-->>BE: Return updated data
-    BE-->>FE: Success response
-    FE-->>User: Refresh tampilan
+### AUTO
+
+Pada kondisi **CERAH**:
+
+```text
+Soil Moisture < 25%
+→ Pompa ON
+```
+
+```text
+Soil Moisture >= 25%
+→ Pompa OFF
+```
+
+### MANUAL
+
+Pengguna dapat mengontrol pompa secara langsung melalui **Control Panel**.
+
+---
+
+## 🌧️ Rain Override
+
+Rain sensor memiliki prioritas tertinggi dalam sistem kontrol.
+
+Jika hujan terdeteksi:
+
+```text
+HUJAN
+↓
+GLOBAL OVERRIDE
+↓
+SEMUA POMPA OFF
+```
+
+Rain override tetap berlaku walaupun petak menggunakan mode MANUAL.
+
+---
+
+# 🖥️ Halaman Aplikasi
+
+## 🏠 Home
+
+Landing page Smart Farming yang menampilkan:
+
+- Informasi sistem
+- Fitur utama
+- Alur kerja
+- Preview monitoring
+- Teknologi yang digunakan
+
+---
+
+## 📊 Dashboard
+
+Dashboard digunakan untuk monitoring kondisi Smart Farming.
+
+Fitur Dashboard:
+
+- Ringkasan kondisi lahan
+- Rain sensor global
+- Humidity global
+- Status pompa
+- Mode AUTO
+- Early warning
+- Grafik soil moisture
+- Distribusi kondisi petak
+- Rekomendasi sistem
+- Tabel sensor dan aktuator
+- Visualisasi 2D
+- Visualisasi 3D
+
+### Visualisasi 2D / 3D
+
+Dashboard menggunakan **2D View sebagai tampilan default** agar halaman dapat dimuat lebih cepat.
+
+```text
+Dashboard
+   ↓
+2D Monitoring View
+   ↓
+User memilih "Visualisasi 3D"
+   ↓
+Three.js dimuat
+   ↓
+Interactive Smart Farm 3D
+```
+
+Model 3D menggunakan **lazy loading**, sehingga Three.js hanya dimuat ketika pengguna memilih mode 3D.
+
+---
+
+## 🎛️ Control Panel
+
+Control Panel digunakan untuk mengatur sistem secara langsung.
+
+Fitur:
+
+- Simulasi Rain Sensor
+- Kontrol humidity global
+- Menjalankan AUTO Control
+- Mengubah mode AUTO / MANUAL
+- Menyalakan atau mematikan pompa pada mode MANUAL
+- Monitoring soil moisture setiap petak
+
+Ketika rain sensor mendeteksi hujan, semua kontrol pompa ON akan diblokir.
+
+---
+
+## 📄 Report
+
+Halaman Report menyediakan ringkasan kondisi Smart Farming dalam format laporan.
+
+Informasi yang ditampilkan:
+
+- Executive Summary
+- Environment Status
+- Operation Status
+- Field Condition
+- System Findings
+- Detail setiap petak
+- Report Notes
+
+Report juga menyediakan fitur:
+
+```text
+Export CSV
+```
+
+Data CSV mencakup informasi soil moisture, kondisi tanah, pompa, mode kontrol, rain sensor, humidity global, dan waktu laporan.
+
+---
+
+## ℹ️ About
+
+Halaman About menjelaskan:
+
+- Smart Farming IoT
+- Tujuan sistem
+- Fitur utama
+- Alur kerja sistem
+- Teknologi yang digunakan
+- Informasi project / developer
+
+---
+
+# 🧠 Logika Sistem
+
+Berikut prioritas utama sistem:
+
+```text
+RAIN SENSOR
+     │
+     ├── HUJAN
+     │     ↓
+     │  Semua Pompa OFF
+     │
+     └── CERAH
+           ↓
+      Cek Control Mode
+           │
+           ├── AUTO
+           │     ↓
+           │  Cek Soil Moisture
+           │     │
+           │     ├── < 25% → ON
+           │     └── >=25% → OFF
+           │
+           └── MANUAL
+                 ↓
+            Kontrol User
 ```
 
 ---
 
-## 📂 Struktur Folder
+# 🗄️ Struktur Database
 
-```
-monitoring_smartfarming/
-│
-├── 📁 backend/                    # Server-side application
-│   ├── 📄 server.js               # Entry point Express server & API routes
-│   ├── 📄 supabaseClient.js       # Konfigurasi koneksi Supabase
-│   ├── 📄 package.json            # Dependencies backend
-│   └── 📄 .env                    # Environment variables (SUPABASE_URL, SUPABASE_KEY)
-│
-├── 📁 frontend/                   # Client-side application
-│   ├── 📁 src/
-│   │   ├── 📁 components/
-│   │   │   ├── 📄 Farm3DModel.jsx     # Model 3D interaktif lahan (Three.js)
-│   │   │   ├── 📄 Navbar.jsx          # Komponen navigasi
-│   │   │   ├── 📄 SensorTable.jsx     # Tabel data sensor
-│   │   │   └── 📄 SystemPreview.jsx   # Preview arsitektur sistem
-│   │   │
-│   │   ├── 📁 pages/
-│   │   │   ├── 📄 HomePage.jsx        # Halaman utama / landing page
-│   │   │   ├── 📄 DashboardPage.jsx   # Dashboard monitoring utama
-│   │   │   ├── 📄 ControlPanelPage.jsx# Kontrol pompa irigasi
-│   │   │   ├── 📄 ReportPage.jsx      # Laporan kondisi lahan
-│   │   │   └── 📄 AboutPage.jsx       # Informasi tentang proyek
-│   │   │
-│   │   ├── 📁 utils/
-│   │   │   └── 📄 farmUtils.js        # Helper functions (status, rekomendasi)
-│   │   │
-│   │   ├── 📄 App.jsx                 # Root component & routing
-│   │   ├── 📄 App.css                 # Styling utama aplikasi
-│   │   └── 📄 index.css               # Base CSS & reset
-│   │
-│   ├── 📄 package.json            # Dependencies frontend
-│   └── 📄 vite.config.js          # Konfigurasi Vite
-│
-├── 📄 README.md                   # Dokumentasi proyek (file ini)
-└── 📄 .gitignore                  # File yang diabaikan git
-```
+Sistem menggunakan dua sumber data utama.
 
----
+## `sensor_data`
 
-## Cara Instalasi & Menjalankan
+Menyimpan data individual setiap petak.
 
-### Prasyarat
+| Kolom | Fungsi |
+|---|---|
+| `id` | ID data |
+| `plot_number` | Nomor petak |
+| `area` | Nama / area petak |
+| `soil_moisture` | Kelembapan tanah |
+| `pump_status` | ON / OFF |
+| `control_mode` | AUTO / MANUAL |
+| `created_at` | Waktu data dibuat |
 
-Pastikan sudah terinstal di komputer kamu:
-
-- **[Node.js](https://nodejs.org/)** versi 18 atau lebih baru
-- **npm** (sudah termasuk saat install Node.js)
-- Akun **[Supabase](https://supabase.com/)** dengan tabel `sensor_data`
-
-### Langkah 1 — Clone Repository
-
-```bash
-git clone https://github.com/Naufalmiftakhul963/MonitoringSmartFarming.git
-cd MonitoringSmartFarming
-```
-
-### Langkah 2 — Setup Database Supabase
-
-1. Buat project baru di [Supabase](https://supabase.com/)
-2. Buat tabel `sensor_data` dengan kolom berikut:
-
-| Kolom | Tipe | Keterangan |
-|-------|------|------------|
-| `id` | int8 (Primary Key) | ID unik sensor |
-| `area` | text | Nama petak lahan (contoh: "Petak 1") |
-| `temperature` | float8 | Suhu dalam °C |
-| `soil_moisture` | float8 | Kelembaban tanah dalam % |
-| `humidity` | float8 | Kelembaban udara dalam % |
-| `light` | float8 | Intensitas cahaya dalam lux |
-| `pump_status` | text | Status pompa ("ON" / "OFF") |
-| `fan_status` | text | Status kipas ("ON" / "OFF") |
-| `lamp_status` | text | Status lampu ("ON" / "OFF") |
-| `control_mode` | text | Mode kontrol ("MANUAL" / "AUTO") |
-
-3. Isi dengan data awal sensor (contoh 8 petak lahan)
-
-### Langkah 3 — Setup Backend
-
-```bash
-# Masuk ke folder backend
-cd backend
-
-# Install dependencies
-npm install
-
-# Buat file .env (sesuaikan dengan credentials Supabase kamu)
-```
-
-Buat file `.env` di folder `backend/` dengan isi:
-
-```env
-SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_KEY=your-anon-key
-PORT=5000
-```
-
-> ⚠️ **Penting:** Ganti `SUPABASE_URL` dan `SUPABASE_KEY` dengan credentials dari dashboard Supabase kamu (Settings → API).
-
-```bash
-# Jalankan backend (development mode)
-npm run dev
-```
-
-Backend akan berjalan di: **http://localhost:5000**
-
-### Langkah 4 — Setup Frontend
-
-```bash
-# Buka terminal baru, masuk ke folder frontend
-cd frontend
-
-# Install dependencies
-npm install
-
-# Jalankan frontend (development mode)
-npm run dev
-```
-
-Frontend akan berjalan di: **http://localhost:5173**
-
-### Langkah 5 — Buka Aplikasi
-
-Buka browser dan akses: **http://localhost:5173**
-
-> **Tips:** Pastikan backend (port 5000) sudah berjalan terlebih dahulu sebelum membuka frontend agar data sensor bisa tampil.
-
----
-
-## API Endpoints
-
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/` | Cek status server |
-| `GET` | `/api/sensors` | Ambil semua data sensor |
-| `GET` | `/api/summary` | Ambil ringkasan dashboard (total petak, rata-rata, dll) |
-| `PUT` | `/api/pump/:id` | Update status pompa (ON/OFF) berdasarkan ID sensor |
-| `PUT` | `/api/fan/:id` | Update status kipas (ON/OFF) berdasarkan ID sensor |
-| `PUT` | `/api/lamp/:id` | Update status lampu (ON/OFF) berdasarkan ID sensor |
-| `PUT` | `/api/control-mode/:id` | Ubah mode kontrol perangkat (AUTO/MANUAL) |
-| `POST` | `/api/auto-control` | Menjalankan ulang logika kontrol otomatis |
-
-### Contoh Response `/api/sensors`
-
-```json
-[
-  {
-    "id": 1,
-    "area": "Petak 1",
-    "temperature": 31,
-    "soil_moisture": 18,
-    "humidity": 64,
-    "light": 820,
-    "pump_status": "ON",
-    "fan_status": "OFF",
-    "lamp_status": "OFF",
-    "control_mode": "MANUAL"
-  }
-]
-```
-
-### Contoh Response `/api/summary`
+Contoh:
 
 ```json
 {
-  "totalPetak": 8,
-  "avgSoilMoisture": "45.6",
-  "maxTemperature": 34,
-  "activePump": 5,
-  "activeFan": 2,
-  "activeLamp": 1,
-  "autoModeArea": 4,
-  "criticalArea": 4
+  "id": 1,
+  "plot_number": 1,
+  "area": "Petak 1",
+  "soil_moisture": 18,
+  "pump_status": "ON",
+  "control_mode": "AUTO"
 }
 ```
 
 ---
 
-## Fitur Utama
+## `farm_environment`
 
-### Home Page
-- Landing page dengan penjelasan sistem
-- Preview arsitektur teknologi yang digunakan
+Menyimpan kondisi lingkungan global.
 
-### Dashboard
-- **Summary Cards** — Total petak, rata-rata kelembaban, suhu tertinggi, perangkat aktif, area kritis
-- **Model 3D Interaktif** — Visualisasi lahan pertanian dengan Three.js (drag, zoom, klik petak)
-- **Alert Kondisi Lahan** — Peringatan untuk area yang membutuhkan perhatian
-- **Distribusi Status** — Pie chart status Normal / Waspada / Kritis
-- **Rekomendasi Sistem** — Decision support otomatis berdasarkan data sensor
-- **Grafik Kelembaban & Suhu** — Line chart dan bar chart per petak
-- **Tabel Data Sensor** — Data lengkap dari Supabase dengan live badge
-- **Auto Refresh** — Data diperbarui otomatis setiap 60 detik
+| Kolom | Fungsi |
+|---|---|
+| `id` | ID environment |
+| `humidity` | Kelembapan udara global |
+| `rain_detected` | Status rain sensor |
+| `weather_status` | CERAH / HUJAN |
+| `updated_at` | Waktu update |
 
-### Control Panel
-- Kontrol aktuator (pompa irigasi, kipas ventilasi, lampu tanaman)
-- Toggle ON/OFF perangkat secara individual
-- Pengaturan mode AUTO / MANUAL untuk setiap petak
+Contoh:
 
-### Report
-- Laporan ringkasan kondisi seluruh petak lahan
-- Statistik dan analisis data sensor
-
-### About
-- Informasi tentang proyek dan teknologi yang digunakan
+```json
+{
+  "id": 1,
+  "humidity": 91,
+  "rain_detected": false,
+  "weather_status": "CERAH"
+}
+```
 
 ---
 
-## Logika Status Sensor
+# 🏗️ Arsitektur Sistem
 
-Sistem menentukan status lahan berdasarkan dua parameter utama:
+```mermaid
+flowchart LR
 
-| Status | Kondisi | Warna |
-|--------|---------|-------|
-| 🟢 **Normal** | Kelembaban tanah ≥ 40% **DAN** Suhu ≤ 31°C | Hijau |
-| 🟡 **Waspada** | Kelembaban tanah 25–39% **ATAU** Suhu 31–33°C | Kuning |
-| 🔴 **Kritis** | Kelembaban tanah < 25% **ATAU** Suhu > 33°C | Merah |
+    A["Sensor IoT"] --> B["Express Backend"]
+
+    B --> C["Supabase"]
+
+    C --> B
+
+    B --> D["React Frontend"]
+
+    D --> E["Dashboard"]
+    D --> F["Control Panel"]
+    D --> G["Report"]
+    D --> H["About"]
+
+    E --> I["2D Monitoring"]
+
+    E --> J["3D Visualization"]
+
+    F --> K["Pump Control"]
+
+    B --> K
+```
+
+Alur sederhananya:
+
+```text
+Sensor
+  ↓
+Backend Express
+  ↓
+Supabase
+  ↓
+Frontend React
+  ↓
+Dashboard / Control / Report
+  ↓
+Pump Control
+```
 
 ---
 
-## Dibuat Oleh
+# 🛠️ Tech Stack
 
-**Naufal Miftakhul Huda**
+## Frontend
+
+| Teknologi | Fungsi |
+|---|---|
+| React | User Interface |
+| Vite | Development & Build Tool |
+| React Router | Routing halaman |
+| Recharts | Grafik monitoring |
+| Three.js | Visualisasi Smart Farm 3D |
+| Lucide React | Icon UI |
+| CSS | Styling aplikasi |
+
+## Backend
+
+| Teknologi | Fungsi |
+|---|---|
+| Node.js | JavaScript runtime |
+| Express.js | REST API |
+| Supabase JS | Database client |
+| dotenv | Environment variables |
+| CORS | Cross-origin configuration |
+
+## Database
+
+| Teknologi | Fungsi |
+|---|---|
+| Supabase PostgreSQL | Penyimpanan data Smart Farming |
 
 ---
 
-## Keterangan Tambahan
+# 📂 Struktur Proyek
 
-Proyek ini dibuat untuk keperluan tugas matakuliah Sistem Pengukuran dan Monitoring.
-Dosen Pengampu : Dr. Ir. Nur Abdillah Siddiq, S.T.,IPP
+```text
+monitoring_smartfarming/
+│
+├── backend/
+│   ├── server.js
+│   ├── supabaseClient.js
+│   ├── package.json
+│   ├── .env
+│   │
+│   └── scripts/
+│       └── testLatency.js
+│
+├── frontend/
+│   ├── src/
+│   │
+│   ├── components/
+│   │   ├── Farm2DOverview/
+│   │   │   ├── Farm2DOverview.jsx
+│   │   │   └── Farm2DOverview.css
+│   │   │
+│   │   ├── Farm3DModel/
+│   │   │   ├── Farm3DModel.jsx
+│   │   │   └── Farm3DModel.css
+│   │   │
+│   │   ├── Navbar/
+│   │   └── SensorTable/
+│   │
+│   ├── pages/
+│   │   ├── HomePage.jsx
+│   │   ├── DashboardPage.jsx
+│   │   ├── ControlPanelPage.jsx
+│   │   ├── ReportPage.jsx
+│   │   └── AboutPage.jsx
+│   │
+│   ├── utils/
+│   │   └── farmUtils.js
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+└── README.md
+```
+
+> Struktur folder dapat menyesuaikan konfigurasi project yang digunakan.
+
+---
+
+# 🔌 REST API
+
+Backend berjalan secara default pada:
+
+```text
+http://localhost:5000
+```
+
+Beberapa endpoint utama:
+
+| Method | Endpoint | Fungsi |
+|---|---|---|
+| GET | `/api/sensors` | Mengambil data seluruh petak |
+| GET | `/api/environment` | Mengambil kondisi environment global |
+| GET | `/api/summary` | Mengambil ringkasan kondisi lahan |
+| PUT | `/api/environment/rain` | Mengubah rain sensor |
+| PUT | `/api/environment/humidity` | Mengubah humidity global |
+| PUT | `/api/pump/:id` | Mengontrol pompa |
+| PUT | `/api/control-mode/:id` | Mengubah AUTO / MANUAL |
+| POST | `/api/auto-control` | Menjalankan kontrol otomatis |
+
+---
+
+# 🚀 Instalasi
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/USERNAME/NAMA-REPOSITORY.git
+```
+
+Masuk ke project:
+
+```bash
+cd NAMA-REPOSITORY
+```
+
+---
+
+## 2. Install Backend
+
+```bash
+cd backend
+npm install
+```
+
+Buat file:
+
+```text
+backend/.env
+```
+
+Isi:
+
+```env
+SUPABASE_URL=YOUR_SUPABASE_URL
+SUPABASE_KEY=YOUR_SUPABASE_KEY
+PORT=5000
+```
+
+Jalankan backend:
+
+```bash
+npm run dev
+```
+
+atau:
+
+```bash
+node server.js
+```
+
+Backend:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## 3. Install Frontend
+
+Buka terminal baru:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🔐 Environment Variables
+
+Jangan upload file `.env` ke GitHub.
+
+Pastikan `.gitignore` memiliki:
+
+```gitignore
+.env
+node_modules/
+dist/
+```
+
+Contoh environment backend:
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-key
+PORT=5000
+```
+
+---
+
+# 📊 Status Sistem
+
+Versi saat ini memiliki:
+
+```text
+✅ Monitoring 11 Petak
+✅ Soil Moisture Monitoring
+✅ Global Rain Sensor
+✅ Global Humidity
+✅ AUTO / MANUAL Control
+✅ Rain Override
+✅ Smart Irrigation
+✅ Dashboard Analytics
+✅ 2D Farm Monitoring
+✅ Interactive 3D Farm
+✅ Lazy Load 3D
+✅ Early Warning
+✅ Decision Support
+✅ Report Page
+✅ CSV Export
+✅ Responsive UI
+✅ Supabase Integration
+```
+
+---
+
+# 🌱 Smart Farming Logic Summary
+
+```text
+HUJAN
+→ Semua pompa OFF
+
+CERAH + AUTO
+→ Soil < 25%  → Pump ON
+→ Soil >= 25% → Pump OFF
+
+CERAH + MANUAL
+→ User mengontrol pompa
+
+Humidity
+→ Monitoring lingkungan saja
+```
+
+---
+
+# 👨‍💻 Developer
+
+Smart Farming IoT Monitoring System
+
+GitHub:
+
+```text
+https://github.com/solternaindonesia-dotcom
+```
+
+Repository:
+
+```text
+https://github.com/solternaindonesia-dotcom/MonitoringSmartFarming.git
+```
+
+---
+
+<div align="center">
+
+### 🌱 Smart Farming IoT
+
+**Monitoring • Automation • Irrigation • Visualization**
+
+Built with React, Express, Supabase & Three.js.
+
+</div>

@@ -322,7 +322,14 @@ function App() {
         <Route
           path="/"
           element={
-            <HomePage />
+            <HomePage
+              sensors={
+                sensors
+              }
+              environment={
+                environment
+              }
+            />
           }
         />
 

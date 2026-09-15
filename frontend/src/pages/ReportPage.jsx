@@ -1013,22 +1013,6 @@ function ReportPage({
               records
             </span>
 
-            <button
-              type="button"
-              onClick={
-                exportCSV
-              }
-              disabled={
-                !sensors.length
-              }
-            >
-              <Download
-                size={15}
-              />
-
-              CSV
-            </button>
-
           </div>
 
         </div>

@@ -1,207 +1,325 @@
 /* =========================================================
    SENSOR TABLE
+   FINAL CLEAN FARM THEME
    ========================================================= */
 
 .sensor-table-section {
+  width: 100%;
+
   overflow: hidden;
 
-  border: 1px solid #dfe9e2;
-  border-radius: 26px;
+  border: 1px solid #dce7df;
+  border-radius: 24px;
 
   background: #ffffff;
 
   box-shadow:
-    0 14px 34px
-    rgba(22, 101, 52, 0.07);
+    0 14px 32px
+    rgba(15, 23, 42, 0.055);
 }
 
 /* =========================================================
-   HEADER
+   SECTION HEADER
    ========================================================= */
 
-.sensor-table-header {
+.sensor-table-section .sensor-table-heading {
   display: flex;
+
   align-items: center;
 
-  gap: 16px;
+  gap: 17px;
 
-  padding: 24px 26px;
+  padding: 27px 30px;
 
-  border-bottom: 1px solid #e8efe9;
+  border-bottom: 1px solid #e5ece7;
 
   background:
     linear-gradient(
       135deg,
-      #ffffff,
-      #f6fbf7
+      #ffffff 0%,
+      #fbfdfb 100%
     );
 }
 
-.sensor-table-header-icon {
+.sensor-table-section .sensor-table-heading-icon {
   display: grid;
 
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
 
   flex-shrink: 0;
 
   place-items: center;
 
-  border-radius: 15px;
+  border: 1px solid #bbf7d0;
+
+  border-radius: 16px;
 
   color: #15803d;
 
-  background: #dcfce7;
+  background:
+    linear-gradient(
+      135deg,
+      #dcfce7,
+      #f0fdf4
+    );
 }
 
-.sensor-table-header-text span {
+.sensor-table-section .sensor-table-eyebrow {
   display: block;
 
-  margin-bottom: 7px;
+  margin: 0 0 5px;
 
   color: #16a34a;
 
   font-size: 10px;
+
   font-weight: 900;
 
-  letter-spacing: 1.3px;
+  letter-spacing: 1.1px;
 }
 
-.sensor-table-header-text h2 {
+.sensor-table-section .sensor-table-heading h2 {
   margin: 0;
 
-  color: #12261a;
+  color: #17251c;
 
-  font-size: 22px;
-  line-height: 1.25;
+  font-size: 23px;
+
+  font-weight: 900;
+
+  line-height: 1.2;
 }
 
-.sensor-table-header-text p {
+.sensor-table-section .sensor-table-heading p {
   margin: 7px 0 0;
 
   color: #64748b;
 
-  font-size: 13px;
+  font-size: 12px;
+
   line-height: 1.6;
 }
 
 /* =========================================================
-   WRAPPER
+   TABLE WRAPPER
    ========================================================= */
 
-.sensor-table-wrapper {
+.sensor-table-section .sensor-table-wrapper {
   width: 100%;
 
   overflow-x: auto;
+
+  background: #ffffff;
 }
 
 /* =========================================================
    TABLE
    ========================================================= */
 
-.sensor-table {
+.sensor-table-section .sensor-table {
   width: 100%;
 
-  border-collapse: collapse;
+  min-width: 940px;
 
-  table-layout: fixed;
+  border-collapse: separate;
+
+  border-spacing: 0;
+
+  background: #ffffff;
 }
 
-.sensor-table thead {
-  background: #f8faf9;
+/* =========================================================
+   HEADER RESET
+   PAKSA HILANGKAN HIJAU TUA LAMA
+   ========================================================= */
+
+.sensor-table-section .sensor-table thead,
+.sensor-table-section .sensor-table thead tr {
+  background: #f3f8f4 !important;
 }
 
-.sensor-table th {
-  padding: 14px 18px;
+/*
+  INI BAGIAN TERPENTING.
 
-  border-bottom: 1px solid #dfe7e1;
+  Kalau CSS lama punya background hijau
+  langsung pada TH, selector ini akan
+  override.
+*/
 
-  color: #475569;
+.sensor-table-section .sensor-table thead th {
+  height: 58px;
+
+  padding: 0 22px;
+
+  border: 0 !important;
+
+  border-bottom:
+    1px solid #dce8df !important;
+
+  color: #4d6455 !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f5faf6 0%,
+      #eef6f0 100%
+    ) !important;
 
   font-size: 11px;
+
   font-weight: 900;
 
-  letter-spacing: 0.25px;
+  letter-spacing: 0.42px;
 
   text-align: left;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
 }
 
-.sensor-table-th-content {
-  display: inline-flex;
+/* garis antar kolom yang tipis */
+
+.sensor-table-section
+.sensor-table
+thead
+th + th {
+  border-left:
+    1px solid
+    rgba(
+      22,
+      101,
+      52,
+      0.06
+    ) !important;
+}
+
+/* =========================================================
+   HEADER CONTENT
+   ========================================================= */
+
+.sensor-table-section .sensor-table-th {
+  display: flex;
+
   align-items: center;
 
-  gap: 6px;
+  gap: 8px;
+
+  color: #4d6455 !important;
 }
 
-.sensor-table td {
-  padding: 14px 18px;
+.sensor-table-section .sensor-table-th svg {
+  width: 16px;
+  height: 16px;
 
-  border-bottom: 1px solid #edf2ef;
+  flex-shrink: 0;
 
-  color: #334155;
+  color: #16a34a !important;
 
-  font-size: 13px;
-
-  vertical-align: middle;
+  stroke: currentColor;
 }
 
-.sensor-table tbody tr {
+/* =========================================================
+   BODY
+   ========================================================= */
+
+.sensor-table-section
+.sensor-table
+tbody {
+  background: #ffffff;
+}
+
+.sensor-table-section
+.sensor-table
+tbody
+tr {
+  background: #ffffff !important;
+
   transition:
     background 0.18s ease,
     transform 0.18s ease;
 }
 
-.sensor-table tbody tr:hover {
-  background: #f8fdf9;
+/* alternate row sangat halus */
+
+.sensor-table-section
+.sensor-table
+tbody
+tr:nth-child(even) {
+  background:
+    #fcfefd !important;
 }
 
-.sensor-table tbody tr:last-child td {
-  border-bottom: none;
+/* hover */
+
+.sensor-table-section
+.sensor-table
+tbody
+tr:hover {
+  background:
+    #f6fbf7 !important;
 }
 
 /* =========================================================
-   COLUMN WIDTH
+   BODY CELL
    ========================================================= */
 
-.sensor-table th:nth-child(1),
-.sensor-table td:nth-child(1) {
-  width: 20%;
+.sensor-table-section
+.sensor-table
+tbody
+td {
+  height: 72px;
+
+  padding: 0 22px;
+
+  border: 0;
+
+  border-bottom:
+    1px solid #edf1ee;
+
+  color: #334155;
+
+  background: transparent !important;
+
+  font-size: 12px;
+
+  vertical-align: middle;
 }
 
-.sensor-table th:nth-child(2),
-.sensor-table td:nth-child(2) {
-  width: 25%;
-}
-
-.sensor-table th:nth-child(3),
-.sensor-table td:nth-child(3) {
-  width: 18%;
-}
-
-.sensor-table th:nth-child(4),
-.sensor-table td:nth-child(4) {
-  width: 18%;
-}
-
-.sensor-table th:nth-child(5),
-.sensor-table td:nth-child(5) {
-  width: 19%;
+.sensor-table-section
+.sensor-table
+tbody
+tr:last-child
+td {
+  border-bottom: 0;
 }
 
 /* =========================================================
    PETAK
    ========================================================= */
 
-.sensor-table-area {
+.sensor-table-section .sensor-plot-cell {
   display: flex;
+
   align-items: center;
 
-  gap: 9px;
+  gap: 11px;
 }
 
-.sensor-table-area-dot {
-  width: 9px;
-  height: 9px;
+.sensor-table-section
+.sensor-plot-cell strong {
+  color: #17251c;
+
+  font-size: 13px;
+
+  font-weight: 900;
+}
+
+.sensor-table-section
+.sensor-plot-dot {
+  width: 10px;
+  height: 10px;
 
   flex-shrink: 0;
 
@@ -210,174 +328,342 @@
   background: #22c55e;
 
   box-shadow:
-    0 0 0 4px
-    rgba(34, 197, 94, 0.12);
-}
-
-.sensor-table-area strong {
-  color: #12261a;
-
-  font-size: 13px;
+    0 0 0 5px
+    rgba(
+      34,
+      197,
+      94,
+      0.12
+    );
 }
 
 /* =========================================================
-   SOIL
+   SOIL CELL
    ========================================================= */
 
-.sensor-table-soil {
-  display: inline-flex;
+.sensor-table-section .sensor-soil-cell {
+  display: grid;
+
+  grid-template-columns:
+    21px
+    50px
+    minmax(
+      100px,
+      130px
+    );
+
   align-items: center;
 
-  gap: 7px;
+  gap: 10px;
+
+  min-width: 230px;
+}
+
+.sensor-table-section
+.sensor-soil-cell
+> svg {
+  width: 18px;
+  height: 18px;
 
   color: #2563eb;
 }
 
-.sensor-table-soil strong {
-  color: #1e3a8a;
+.sensor-table-section
+.sensor-soil-cell
+strong {
+  color: #1d4ed8;
 
   font-size: 14px;
+
+  font-weight: 900;
 }
 
 /* =========================================================
-   PILLS
+   SOIL PROGRESS
    ========================================================= */
 
-.sensor-table-pill {
+.sensor-table-section
+.sensor-soil-progress {
+  position: relative;
+
+  width: 100%;
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e5ebf1;
+}
+
+.sensor-table-section
+.sensor-soil-progress
+span {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #3b82f6,
+      #60a5fa
+    );
+
+  box-shadow:
+    0 2px 5px
+    rgba(
+      59,
+      130,
+      246,
+      0.2
+    );
+}
+
+/* =========================================================
+   GLOBAL PILL
+   ========================================================= */
+
+.sensor-table-section .sensor-pill {
   display: inline-flex;
+
   align-items: center;
+
+  justify-content: center;
 
   gap: 6px;
 
-  padding: 6px 10px;
+  min-height: 32px;
+
+  padding: 6px 12px;
+
+  border: 1px solid transparent;
 
   border-radius: 999px;
 
   font-size: 11px;
+
   font-weight: 900;
+
+  line-height: 1;
+
+  white-space: nowrap;
 }
 
-.sensor-table-pill.pump.on {
-  color: #166534;
-
-  background: #dcfce7;
+.sensor-table-section
+.sensor-pill svg {
+  width: 15px;
+  height: 15px;
 }
 
-.sensor-table-pill.pump.off {
+/* =========================================================
+   PUMP ON
+   ========================================================= */
+
+.sensor-table-section
+.sensor-pill.pump.on {
+  border-color: #bbf7d0;
+
+  color: #15803d;
+
+  background: #ecfdf3;
+}
+
+/* =========================================================
+   PUMP OFF
+   ========================================================= */
+
+.sensor-table-section
+.sensor-pill.pump.off {
+  border-color: #e2e8f0;
+
   color: #64748b;
 
-  background: #f1f5f9;
-}
-
-.sensor-table-pill.mode.auto {
-  color: #4d7c0f;
-
-  background: #ecfccb;
-}
-
-.sensor-table-pill.mode.manual {
-  color: #7c3aed;
-
-  background: #ede9fe;
+  background: #f8fafc;
 }
 
 /* =========================================================
-   STATUS
+   MODE AUTO
    ========================================================= */
 
-.sensor-table-status {
-  display: inline-flex;
-  align-items: center;
+.sensor-table-section
+.sensor-pill.mode.auto {
+  border-color: #d9f99d;
 
-  gap: 6px;
+  color: #4d7c0f;
 
-  padding: 6px 10px;
-
-  border-radius: 999px;
-
-  font-size: 11px;
-  font-weight: 900;
+  background: #f7fee7;
 }
 
-.sensor-table-status.normal {
+/* =========================================================
+   MODE MANUAL
+   ========================================================= */
+
+.sensor-table-section
+.sensor-pill.mode.manual {
+  border-color: #ddd6fe;
+
+  color: #7c3aed;
+
+  background: #f5f3ff;
+}
+
+/* =========================================================
+   STATUS NORMAL
+   ========================================================= */
+
+.sensor-table-section
+.sensor-pill.status.normal {
+  border-color: #bbf7d0;
+
   color: #166534;
 
-  background: #dcfce7;
+  background: #ecfdf3;
 }
 
-.sensor-table-status.warning {
-  color: #a16207;
+/* =========================================================
+   STATUS WARNING
+   ========================================================= */
 
-  background: #fef9c3;
+.sensor-table-section
+.sensor-pill.status.warning {
+  border-color: #fde68a;
+
+  color: #b45309;
+
+  background: #fffbeb;
 }
 
-.sensor-table-status.critical {
+/* =========================================================
+   STATUS CRITICAL
+   ========================================================= */
+
+.sensor-table-section
+.sensor-pill.status.critical {
+  border-color: #fecaca;
+
   color: #dc2626;
 
-  background: #fee2e2;
+  background: #fff1f2;
 }
 
 /* =========================================================
    LEGEND
    ========================================================= */
 
+.sensor-table-section
 .sensor-table-legend {
   display: flex;
+
   align-items: center;
-  justify-content: flex-end;
 
   flex-wrap: wrap;
 
-  gap: 10px;
+  gap: 16px;
 
-  padding: 14px 18px;
+  min-height: 52px;
 
-  border-top: 1px solid #e8efe9;
+  padding: 13px 22px;
 
-  background: #fbfdfb;
+  border-top:
+    1px solid #e6ede8;
+
+  color: #64748b;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fbfdfc,
+      #f7faf8
+    );
+
+  font-size: 10px;
 }
 
-.sensor-table-legend-item {
+.sensor-table-section
+.sensor-table-legend
+> span {
+  color: #475569;
+
+  font-weight: 900;
+}
+
+.sensor-table-section
+.sensor-table-legend
+> div {
   display: inline-flex;
+
   align-items: center;
 
   gap: 6px;
-
-  padding: 6px 9px;
-
-  border-radius: 999px;
-
-  color: #475569;
-
-  background: #ffffff;
-
-  font-size: 10px;
-  font-weight: 800;
 }
 
-.sensor-table-legend-item > span {
+.sensor-table-section
+.legend-dot {
+  display: block;
+
   width: 8px;
   height: 8px;
+
+  flex-shrink: 0;
 
   border-radius: 50%;
 }
 
-.sensor-table-legend-item.normal > span {
+.sensor-table-section
+.legend-dot.normal {
   background: #22c55e;
 }
 
-.sensor-table-legend-item.warning > span {
-  background: #eab308;
+.sensor-table-section
+.legend-dot.warning {
+  background: #f59e0b;
 }
 
-.sensor-table-legend-item.critical > span {
+.sensor-table-section
+.legend-dot.critical {
   background: #ef4444;
 }
 
-.sensor-table-legend-item strong {
-  color: #334155;
+/* =========================================================
+   EMPTY
+   ========================================================= */
 
-  font-weight: 900;
+.sensor-table-section
+.sensor-table-empty {
+  height: 130px !important;
+
+  color: #94a3b8 !important;
+
+  background: #ffffff !important;
+
+  text-align: center !important;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.sensor-table-section
+.sensor-table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.sensor-table-section
+.sensor-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f3;
+}
+
+.sensor-table-section
+.sensor-table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+
+  background: #cbded0;
 }
 
 /* =========================================================
@@ -385,28 +671,55 @@
    ========================================================= */
 
 @media (max-width: 900px) {
+  .sensor-table-section
+  .sensor-table-heading {
+    padding: 24px;
+  }
+
+  .sensor-table-section
   .sensor-table {
-    min-width: 760px;
+    min-width: 900px;
   }
 }
 
-@media (max-width: 620px) {
-  .sensor-table-header {
+@media (max-width: 760px) {
+  .sensor-table-section {
+    border-radius: 20px;
+  }
+
+  .sensor-table-section
+  .sensor-table-heading {
     align-items: flex-start;
+
+    gap: 13px;
 
     padding: 20px;
   }
 
-  .sensor-table-header-icon {
-    width: 44px;
-    height: 44px;
+  .sensor-table-section
+  .sensor-table-heading-icon {
+    width: 47px;
+    height: 47px;
+
+    border-radius: 14px;
   }
 
-  .sensor-table-header-text h2 {
+  .sensor-table-section
+  .sensor-table-heading h2 {
     font-size: 19px;
   }
 
+  .sensor-table-section
+  .sensor-table-heading p {
+    font-size: 11px;
+  }
+
+  .sensor-table-section
   .sensor-table-legend {
-    justify-content: flex-start;
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
   }
 }

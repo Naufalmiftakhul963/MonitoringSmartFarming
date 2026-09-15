@@ -1,31 +1,68 @@
 import {
-  AlertTriangle,
   Bot,
   CheckCircle2,
   Droplets,
   Power,
   Sprout,
+  TriangleAlert,
 } from "lucide-react";
 
 import "./SensorTable.css";
 
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function getSoilStatus(soil) {
+  const value =
+    Number(soil) || 0;
+
+  if (value < 25) {
+    return {
+      label: "Kritis",
+      className: "critical",
+      icon: TriangleAlert,
+    };
+  }
+
+  if (value < 40) {
+    return {
+      label: "Waspada",
+      className: "warning",
+      icon: TriangleAlert,
+    };
+  }
+
+  return {
+    label: "Normal",
+    className: "normal",
+    icon: CheckCircle2,
+  };
+}
+
+/* =========================================================
+   SENSOR TABLE
+   ========================================================= */
+
 function SensorTable({
   sensors = [],
-  getStatusClass,
-  getStatusLabel,
 }) {
   return (
     <section className="sensor-table-section">
 
-      <div className="sensor-table-header">
+      {/* ===================================================
+          HEADER
+          =================================================== */}
 
-        <div className="sensor-table-header-icon">
-          <Sprout size={22} />
+      <div className="sensor-table-heading">
+
+        <div className="sensor-table-heading-icon">
+          <Sprout size={25} />
         </div>
 
-        <div className="sensor-table-header-text">
+        <div>
 
-          <span>
+          <span className="sensor-table-eyebrow">
             SENSOR DATA
           </span>
 
@@ -43,6 +80,10 @@ function SensorTable({
 
       </div>
 
+      {/* ===================================================
+          TABLE
+          =================================================== */}
+
       <div className="sensor-table-wrapper">
 
         <table className="sensor-table">
@@ -51,32 +92,37 @@ function SensorTable({
             <tr>
 
               <th>
-                PETAK
+                <div className="sensor-table-th">
+                  <Sprout size={16} />
+                  Petak
+                </div>
               </th>
 
               <th>
-                <span className="sensor-table-th-content">
-                  <Droplets size={14} />
-                  KELEMBAPAN TANAH
-                </span>
+                <div className="sensor-table-th">
+                  <Droplets size={16} />
+                  Kelembapan Tanah
+                </div>
               </th>
 
               <th>
-                <span className="sensor-table-th-content">
-                  <Power size={14} />
-                  POMPA
-                </span>
+                <div className="sensor-table-th">
+                  <Power size={16} />
+                  Pompa
+                </div>
               </th>
 
               <th>
-                <span className="sensor-table-th-content">
-                  <Bot size={14} />
-                  MODE
-                </span>
+                <div className="sensor-table-th">
+                  <Bot size={16} />
+                  Mode
+                </div>
               </th>
 
               <th>
-                STATUS
+                <div className="sensor-table-th">
+                  Status
+                </div>
               </th>
 
             </tr>
@@ -84,103 +130,175 @@ function SensorTable({
 
           <tbody>
 
-            {sensors.map(
-              (item) => {
-                const statusClass =
-                  getStatusClass(item);
+            {sensors.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="sensor-table-empty"
+                >
+                  Belum ada data sensor.
+                </td>
+              </tr>
+            ) : (
+              sensors.map(
+                (sensor, index) => {
+                  const soil =
+                    Number(
+                      sensor?.soil_moisture
+                    ) || 0;
 
-                const statusLabel =
-                  getStatusLabel(item);
+                  const status =
+                    getSoilStatus(
+                      soil
+                    );
 
-                const pumpOn =
-                  String(
-                    item.pump_status || ""
-                  ).toUpperCase() === "ON";
+                  const StatusIcon =
+                    status.icon;
 
-                const autoMode =
-                  String(
-                    item.control_mode || ""
-                  ).toUpperCase() === "AUTO";
+                  const pumpOn =
+                    String(
+                      sensor?.pump_status ||
+                      ""
+                    ).toUpperCase() ===
+                    "ON";
 
-                return (
-                  <tr key={item.id}>
+                  const autoMode =
+                    String(
+                      sensor?.control_mode ||
+                      ""
+                    ).toUpperCase() ===
+                    "AUTO";
 
-                    <td>
-                      <div className="sensor-table-area">
+                  return (
+                    <tr
+                      key={
+                        sensor?.id ??
+                        sensor?.plot_number ??
+                        index
+                      }
+                    >
 
-                        <span className="sensor-table-area-dot" />
+                      {/* PETAK */}
 
-                        <strong>
-                          {item.area}
-                        </strong>
+                      <td>
 
-                      </div>
-                    </td>
+                        <div className="sensor-plot-cell">
 
-                    <td>
-                      <div className="sensor-table-soil">
+                          <span className="sensor-plot-dot" />
 
-                        <Droplets size={16} />
+                          <strong>
+                            Petak{" "}
+                            {
+                              sensor?.plot_number ??
+                              index + 1
+                            }
+                          </strong>
 
-                        <strong>
-                          {Number(
-                            item.soil_moisture ?? 0
-                          )}
-                          %
-                        </strong>
+                        </div>
 
-                      </div>
-                    </td>
+                      </td>
 
-                    <td>
-                      <span
-                        className={`sensor-table-pill pump ${
-                          pumpOn
-                            ? "on"
-                            : "off"
-                        }`}
-                      >
-                        <Power size={13} />
+                      {/* SOIL */}
 
-                        {pumpOn
-                          ? "ON"
-                          : "OFF"}
-                      </span>
-                    </td>
+                      <td>
 
-                    <td>
-                      <span
-                        className={`sensor-table-pill mode ${
-                          autoMode
-                            ? "auto"
-                            : "manual"
-                        }`}
-                      >
-                        <Bot size={13} />
+                        <div className="sensor-soil-cell">
 
-                        {autoMode
-                          ? "AUTO"
-                          : "MANUAL"}
-                      </span>
-                    </td>
+                          <Droplets size={18} />
 
-                    <td>
-                      <span
-                        className={`sensor-table-status ${statusClass}`}
-                      >
-                        {statusClass === "normal" ? (
-                          <CheckCircle2 size={14} />
-                        ) : (
-                          <AlertTriangle size={14} />
-                        )}
+                          <strong>
+                            {soil}%
+                          </strong>
 
-                        {statusLabel}
-                      </span>
-                    </td>
+                          <div className="sensor-soil-progress">
 
-                  </tr>
-                );
-              }
+                            <span
+                              style={{
+                                width:
+                                  `${Math.min(
+                                    100,
+                                    Math.max(
+                                      0,
+                                      soil
+                                    )
+                                  )}%`,
+                              }}
+                            />
+
+                          </div>
+
+                        </div>
+
+                      </td>
+
+                      {/* PUMP */}
+
+                      <td>
+
+                        <span
+                          className={
+                            pumpOn
+                              ? "sensor-pill pump on"
+                              : "sensor-pill pump off"
+                          }
+                        >
+
+                          <Power size={15} />
+
+                          {pumpOn
+                            ? "ON"
+                            : "OFF"}
+
+                        </span>
+
+                      </td>
+
+                      {/* MODE */}
+
+                      <td>
+
+                        <span
+                          className={
+                            autoMode
+                              ? "sensor-pill mode auto"
+                              : "sensor-pill mode manual"
+                          }
+                        >
+
+                          <Bot size={15} />
+
+                          {autoMode
+                            ? "AUTO"
+                            : "MANUAL"}
+
+                        </span>
+
+                      </td>
+
+                      {/* STATUS */}
+
+                      <td>
+
+                        <span
+                          className={
+                            `sensor-pill status ${status.className}`
+                          }
+                        >
+
+                          <StatusIcon
+                            size={15}
+                          />
+
+                          {status.label}
+
+                        </span>
+
+                      </td>
+
+                    </tr>
+                  );
+                }
+              )
             )}
 
           </tbody>
@@ -189,30 +307,29 @@ function SensorTable({
 
       </div>
 
+      {/* ===================================================
+          LEGEND
+          =================================================== */}
+
       <div className="sensor-table-legend">
 
-        <div className="sensor-table-legend-item normal">
-          <span />
-          Normal
-          <strong>
-            ≥ 40%
-          </strong>
+        <span>
+          Status tanah:
+        </span>
+
+        <div>
+          <i className="legend-dot critical" />
+          Kritis &lt; 25%
         </div>
 
-        <div className="sensor-table-legend-item warning">
-          <span />
-          Waspada
-          <strong>
-            25–39%
-          </strong>
+        <div>
+          <i className="legend-dot warning" />
+          Waspada 25–39%
         </div>
 
-        <div className="sensor-table-legend-item critical">
-          <span />
-          Kritis
-          <strong>
-            &lt; 25%
-          </strong>
+        <div>
+          <i className="legend-dot normal" />
+          Normal ≥ 40%
         </div>
 
       </div>

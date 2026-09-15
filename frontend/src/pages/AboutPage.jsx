@@ -1,131 +1,93 @@
-import { useState } from "react";
-
 import {
-  Activity,
   ArrowRight,
   Bot,
-  CheckCircle2,
   CloudRain,
   Code2,
-  Cpu,
   Database,
   Droplets,
-  Gauge,
-  Layers3,
   Leaf,
-  Network,
   Power,
   Server,
   ShieldCheck,
   Sprout,
-  Sun,
-  Wifi,
   Wind,
 } from "lucide-react";
 
 import "./AboutPage.css";
 
 /* =========================================================
-   SYSTEM MODULES
+   FEATURES
    ========================================================= */
 
-const modules = [
+const features = [
   {
-    id: "soil",
-    title: "Monitoring Tanah",
-    subtitle: "Sensor per petak",
+    title: "Soil Monitoring",
+    description:
+      "Monitoring kelembapan tanah pada masing-masing Petak 1 sampai Petak 11.",
     icon: Droplets,
-
-    description:
-      "Setiap petak memiliki pembacaan soil moisture sendiri sehingga kondisi tanah dapat dipantau secara individual.",
-
-    points: [
-      "11 petak pertanian",
-      "Soil moisture per petak",
-      "Normal, Waspada, dan Kritis",
-      "Data monitoring real-time",
-    ],
+    className: "soil",
   },
 
   {
-    id: "environment",
-    title: "Lingkungan Global",
-    subtitle: "Rain sensor & humidity",
+    title: "Rain Sensor",
+    description:
+      "Sensor hujan global untuk menentukan kondisi CERAH atau HUJAN.",
     icon: CloudRain,
-
-    description:
-      "Rain sensor dan kelembapan udara digunakan sebagai kondisi lingkungan global untuk seluruh area pertanian.",
-
-    points: [
-      "Rain sensor global",
-      "Humidity global",
-      "Status CERAH / HUJAN",
-      "Rain override untuk pompa",
-    ],
+    className: "rain",
   },
 
   {
-    id: "irrigation",
-    title: "Smart Irrigation",
-    subtitle: "AUTO & MANUAL",
+    title: "Global Humidity",
+    description:
+      "Monitoring kelembapan udara sebagai data lingkungan seluruh lahan.",
+    icon: Wind,
+    className: "humidity",
+  },
+
+  {
+    title: "AUTO / MANUAL",
+    description:
+      "Mode kontrol pompa dapat dipilih secara otomatis atau manual pada setiap petak.",
     icon: Bot,
-
-    description:
-      "Sistem irigasi dapat berjalan otomatis berdasarkan kondisi tanah atau dikontrol manual oleh pengguna.",
-
-    points: [
-      "Mode AUTO",
-      "Mode MANUAL",
-      "Soil < 25% → AUTO ON",
-      "HUJAN → semua pompa OFF",
-    ],
+    className: "automation",
   },
 
   {
-    id: "visual",
-    title: "Visual Farm 3D",
-    subtitle: "Interactive monitoring",
-    icon: Layers3,
-
+    title: "Smart Irrigation",
     description:
-      "Visualisasi Three.js membantu pengguna memahami kondisi setiap petak secara visual dan interaktif.",
-
-    points: [
-      "Visual 11 petak",
-      "Tanaman dan irigasi",
-      "Klik petak untuk detail",
-      "Visual kondisi lahan",
-    ],
+      "Pompa bekerja berdasarkan kondisi tanah dan rain sensor.",
+    icon: Power,
+    className: "pump",
   },
 ];
 
 /* =========================================================
-   TECH STACK
+   TECHNOLOGY
    ========================================================= */
 
 const technologies = [
   {
     name: "React + Vite",
-    label: "Frontend",
+    type: "Frontend",
     icon: Code2,
   },
 
   {
     name: "Node.js Express",
-    label: "Backend API",
+    type: "Backend",
     icon: Server,
   },
 
   {
     name: "Supabase",
-    label: "Database",
+    type: "Database",
     icon: Database,
   },
 
   {
     name: "Three.js",
-    label: "3D Visual",
-    icon: Layers3,
+    type: "3D Visualization",
+    icon: Sprout,
   },
 ];
 
@@ -134,12 +96,6 @@ const technologies = [
    ========================================================= */
 
 function AboutPage() {
-  const [activeModule, setActiveModule] =
-    useState(modules[0]);
-
-  const ActiveIcon =
-    activeModule.icon;
-
   return (
     <main className="about-page">
 
@@ -149,732 +105,497 @@ function AboutPage() {
 
       <section className="about-hero">
 
-        <div className="about-hero-copy">
+        <div className="about-hero-content">
 
           <div className="about-eyebrow">
-            <span />
-            SMART FARMING IoT
+            <Sprout size={17} />
+
+            ABOUT SMART FARMING
           </div>
 
           <h1>
-            Membawa teknologi
-            <br />
-
+            Smart Farming
             <span>
-              ke dalam pertanian.
+              IoT Monitoring System
             </span>
           </h1>
 
           <p>
-            Smart Farming IoT adalah sistem
-            monitoring dan kontrol pertanian
-            yang menggabungkan sensor,
-            database, automation, dan
-            visualisasi 3D dalam satu
-            platform.
+            Sistem monitoring dan kontrol
+            pertanian berbasis IoT yang
+            menghubungkan sensor,
+            otomatisasi irigasi, database,
+            dan visualisasi digital dalam
+            satu platform.
           </p>
 
-          <div className="about-hero-actions">
+          <div className="about-hero-tags">
 
-            <a
-              href="#system"
-              className="about-main-button"
-            >
-              Explore System
+            <span>
+              <Sprout size={15} />
+              11 Petak
+            </span>
 
-              <ArrowRight
-                size={17}
-              />
-            </a>
+            <span>
+              <CloudRain size={15} />
+              Rain Sensor
+            </span>
 
-            <a
-              href="#technology"
-              className="about-ghost-button"
-            >
-              <Cpu
-                size={17}
-              />
-
-              Technology
-            </a>
-
-          </div>
-
-          <div className="about-hero-meta">
-
-            <div>
-              <strong>
-                11
-              </strong>
-
-              <span>
-                Petak
-              </span>
-            </div>
-
-            <div>
-              <strong>
-                2
-              </strong>
-
-              <span>
-                Global Sensor
-              </span>
-            </div>
-
-            <div>
-              <strong>
-                AUTO
-              </strong>
-
-              <span>
-                Irrigation
-              </span>
-            </div>
+            <span>
+              <Bot size={15} />
+              Smart Irrigation
+            </span>
 
           </div>
 
         </div>
 
-        {/* =================================================
-            HERO VISUAL
-            ================================================= */}
+        {/* HERO CARD */}
 
-        <div className="about-hero-visual">
+        <div className="about-hero-card">
 
-          <div className="about-visual-ring ring-one" />
-          <div className="about-visual-ring ring-two" />
+          <div className="about-hero-card-icon">
+            <Leaf size={38} />
+          </div>
 
-          <div className="about-core">
+          <span>
+            SMART FARMING IoT
+          </span>
 
-            <div className="about-core-icon">
-              <Sprout
-                size={44}
-              />
+          <strong>
+            Monitoring &
+            Irrigation System
+          </strong>
+
+          <p>
+            11 petak terhubung dalam
+            satu sistem monitoring
+            pertanian.
+          </p>
+
+          <div className="about-online-status">
+            <span />
+            SYSTEM PROJECT
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          ABOUT + PURPOSE
+          =================================================== */}
+
+      <section className="about-overview-grid">
+
+        {/* ABOUT */}
+
+        <article className="about-overview-card">
+
+          <div className="about-card-heading">
+
+            <div className="about-heading-icon green">
+              <Sprout size={23} />
+            </div>
+
+            <div>
+
+              <span>
+                TENTANG SISTEM
+              </span>
+
+              <h2>
+                Apa itu Smart Farming?
+              </h2>
+
+            </div>
+
+          </div>
+
+          <p>
+            Smart Farming IoT merupakan
+            sistem yang dirancang untuk
+            membantu proses monitoring
+            kondisi pertanian melalui
+            sensor dan teknologi digital.
+          </p>
+
+          <p>
+            Setiap petak memiliki data
+            soil moisture sendiri,
+            sedangkan rain sensor dan
+            humidity digunakan sebagai
+            kondisi lingkungan global
+            untuk seluruh area pertanian.
+          </p>
+
+          <div className="about-info-highlight">
+
+            <Leaf size={18} />
+
+            <span>
+              Sistem berfokus pada
+              monitoring kondisi lahan
+              dan pengelolaan irigasi.
+            </span>
+
+          </div>
+
+        </article>
+
+        {/* PURPOSE */}
+
+        <article className="about-overview-card">
+
+          <div className="about-card-heading">
+
+            <div className="about-heading-icon blue">
+              <ShieldCheck size={23} />
+            </div>
+
+            <div>
+
+              <span>
+                TUJUAN SISTEM
+              </span>
+
+              <h2>
+                Kenapa sistem ini dibuat?
+              </h2>
+
+            </div>
+
+          </div>
+
+          <div className="about-purpose-list">
+
+            <div>
+
+              <span>
+                01
+              </span>
+
+              <p>
+                Mempermudah monitoring
+                kondisi tanah setiap
+                petak.
+              </p>
+
+            </div>
+
+            <div>
+
+              <span>
+                02
+              </span>
+
+              <p>
+                Membantu proses irigasi
+                menggunakan kontrol
+                otomatis.
+              </p>
+
+            </div>
+
+            <div>
+
+              <span>
+                03
+              </span>
+
+              <p>
+                Mencegah penyiraman
+                yang tidak diperlukan
+                ketika hujan.
+              </p>
+
+            </div>
+
+            <div>
+
+              <span>
+                04
+              </span>
+
+              <p>
+                Menampilkan data dalam
+                dashboard yang mudah
+                dipahami.
+              </p>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+      {/* ===================================================
+          FEATURES
+          =================================================== */}
+
+      <section className="about-section">
+
+        <div className="about-section-heading">
+
+          <span>
+            FITUR UTAMA
+          </span>
+
+          <h2>
+            Komponen utama sistem
+          </h2>
+
+          <p>
+            Fitur utama yang digunakan
+            untuk monitoring dan kontrol
+            Smart Farming.
+          </p>
+
+        </div>
+
+        <div className="about-feature-grid">
+
+          {features.map((feature) => {
+            const Icon = feature.icon;
+
+            return (
+              <article
+                key={feature.title}
+                className="about-feature-card"
+              >
+
+                <div
+                  className={`about-feature-icon ${feature.className}`}
+                >
+                  <Icon size={24} />
+                </div>
+
+                <h3>
+                  {feature.title}
+                </h3>
+
+                <p>
+                  {feature.description}
+                </p>
+
+              </article>
+            );
+          })}
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
+          FLOW
+          =================================================== */}
+
+      <section className="about-section">
+
+        <div className="about-section-heading">
+
+          <span>
+            CARA KERJA
+          </span>
+
+          <h2>
+            Alur sistem Smart Farming
+          </h2>
+
+          <p>
+            Mulai dari pembacaan sensor
+            sampai data ditampilkan dan
+            digunakan untuk kontrol
+            irigasi.
+          </p>
+
+        </div>
+
+        <div className="about-flow">
+
+          <div className="about-flow-item">
+
+            <div className="about-flow-icon">
+              <Droplets size={23} />
             </div>
 
             <span>
-              SMART FARM
+              STEP 01
             </span>
 
             <strong>
-              IoT Ecosystem
+              Sensor
             </strong>
 
-          </div>
-
-          <div className="about-node soil-node">
-
-            <Droplets
-              size={18}
-            />
-
-            <div>
-              <span>
-                Soil
-              </span>
-
-              <strong>
-                11 Sensor
-              </strong>
-            </div>
-
-          </div>
-
-          <div className="about-node rain-node">
-
-            <CloudRain
-              size={18}
-            />
-
-            <div>
-              <span>
-                Rain Sensor
-              </span>
-
-              <strong>
-                Global
-              </strong>
-            </div>
-
-          </div>
-
-          <div className="about-node pump-node">
-
-            <Power
-              size={18}
-            />
-
-            <div>
-              <span>
-                Irrigation
-              </span>
-
-              <strong>
-                Smart Pump
-              </strong>
-            </div>
-
-          </div>
-
-          <div className="about-node database-node">
-
-            <Database
-              size={18}
-            />
-
-            <div>
-              <span>
-                Data
-              </span>
-
-              <strong>
-                Supabase
-              </strong>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* ===================================================
-          INTRO
-          =================================================== */}
-
-      <section className="about-story">
-
-        <div className="about-story-number">
-          01
-        </div>
-
-        <div className="about-story-title">
-
-          <span>
-            PROJECT OVERVIEW
-          </span>
-
-          <h2>
-            Monitoring lebih jelas,
-            keputusan lebih cepat.
-          </h2>
-
-        </div>
-
-        <div className="about-story-copy">
-
-          <p>
-            Sistem ini dibuat untuk membantu
-            pengguna mengetahui kondisi
-            lahan tanpa harus memeriksa
-            seluruh area secara manual.
-          </p>
-
-          <p>
-            Sensor per petak menangani
-            kondisi tanah, sedangkan rain
-            sensor dan humidity digunakan
-            sebagai informasi lingkungan
-            global seluruh lahan.
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* ===================================================
-          VALUE CARDS
-          =================================================== */}
-
-      <section className="about-benefit-grid">
-
-        <article>
-
-          <div className="about-benefit-icon green">
-            <Activity
-              size={22}
-            />
-          </div>
-
-          <span>
-            MONITORING
-          </span>
-
-          <h3>
-            Data setiap petak
-          </h3>
-
-          <p>
-            Kondisi soil moisture tidak
-            disamaratakan dan dapat
-            dipantau secara individual.
-          </p>
-
-        </article>
-
-        <article>
-
-          <div className="about-benefit-icon yellow">
-            <Bot
-              size={22}
-            />
-          </div>
-
-          <span>
-            AUTOMATION
-          </span>
-
-          <h3>
-            Smart irrigation
-          </h3>
-
-          <p>
-            Pompa AUTO bekerja berdasarkan
-            nilai kelembapan tanah setiap
-            petak.
-          </p>
-
-        </article>
-
-        <article>
-
-          <div className="about-benefit-icon blue">
-            <ShieldCheck
-              size={22}
-            />
-          </div>
-
-          <span>
-            SAFETY
-          </span>
-
-          <h3>
-            Rain override
-          </h3>
-
-          <p>
-            Ketika hujan terdeteksi,
-            seluruh pompa langsung
-            diprioritaskan OFF.
-          </p>
-
-        </article>
-
-      </section>
-
-      {/* ===================================================
-          INTERACTIVE SYSTEM
-          =================================================== */}
-
-      <section
-        className="about-system"
-        id="system"
-      >
-
-        <div className="about-heading">
-
-          <div>
-
-            <span>
-              02 • SYSTEM EXPLORER
-            </span>
-
-            <h2>
-              Kenali bagian
-              dalam sistem.
-            </h2>
-
             <p>
-              Klik modul untuk melihat
-              cara kerja setiap bagian.
+              Membaca kondisi lahan
             </p>
 
           </div>
 
-          <Network
-            size={27}
+          <ArrowRight
+            className="about-flow-arrow"
+            size={22}
           />
 
-        </div>
+          <div className="about-flow-item">
 
-        <div className="about-system-layout">
-
-          {/* NAVIGATION */}
-
-          <div className="about-module-list">
-
-            {modules.map(
-              (module) => {
-                const Icon =
-                  module.icon;
-
-                const isActive =
-                  activeModule.id ===
-                  module.id;
-
-                return (
-                  <button
-                    type="button"
-                    key={
-                      module.id
-                    }
-                    className={
-                      isActive
-                        ? "active"
-                        : ""
-                    }
-                    onClick={() =>
-                      setActiveModule(
-                        module
-                      )
-                    }
-                  >
-
-                    <div className="about-module-icon">
-                      <Icon
-                        size={19}
-                      />
-                    </div>
-
-                    <div>
-
-                      <strong>
-                        {
-                          module.title
-                        }
-                      </strong>
-
-                      <span>
-                        {
-                          module.subtitle
-                        }
-                      </span>
-
-                    </div>
-
-                    <ArrowRight
-                      size={15}
-                    />
-
-                  </button>
-                );
-              }
-            )}
-
-          </div>
-
-          {/* DETAIL */}
-
-          <article className="about-module-detail">
-
-            <div className="about-module-detail-icon">
-              <ActiveIcon
-                size={31}
-              />
+            <div className="about-flow-icon">
+              <Server size={23} />
             </div>
-
-            <span className="about-module-tag">
-              ACTIVE MODULE
-            </span>
-
-            <h3>
-              {activeModule.title}
-            </h3>
-
-            <p>
-              {
-                activeModule.description
-              }
-            </p>
-
-            <div className="about-module-points">
-
-              {activeModule.points.map(
-                (point) => (
-                  <div
-                    key={point}
-                  >
-
-                    <CheckCircle2
-                      size={15}
-                    />
-
-                    <span>
-                      {point}
-                    </span>
-
-                  </div>
-                )
-              )}
-
-            </div>
-
-          </article>
-
-        </div>
-
-      </section>
-
-      {/* ===================================================
-          ARCHITECTURE
-          =================================================== */}
-
-      <section className="about-data-section">
-
-        <div className="about-heading">
-
-          <div>
 
             <span>
-              03 • DATA STRUCTURE
+              STEP 02
             </span>
 
-            <h2>
-              Global environment
-              dan per-petak data.
-            </h2>
+            <strong>
+              Backend
+            </strong>
+
+            <p>
+              Memproses data dan logic
+            </p>
 
           </div>
 
-          <Database
-            size={27}
+          <ArrowRight
+            className="about-flow-arrow"
+            size={22}
           />
 
-        </div>
+          <div className="about-flow-item">
 
-        <div className="about-data-layout">
-
-          {/* GLOBAL */}
-
-          <article className="about-data-panel global">
-
-            <div className="about-data-panel-header">
-
-              <div>
-
-                <span>
-                  GLOBAL
-                </span>
-
-                <h3>
-                  Farm Environment
-                </h3>
-
-              </div>
-
-              <Wind
-                size={23}
-              />
-
+            <div className="about-flow-icon">
+              <Database size={23} />
             </div>
 
-            <div className="about-data-items">
+            <span>
+              STEP 03
+            </span>
 
-              <div>
+            <strong>
+              Supabase
+            </strong>
 
-                <Wind
-                  size={18}
-                />
-
-                <div>
-                  <span>
-                    Humidity
-                  </span>
-
-                  <strong>
-                    Kelembapan Udara
-                  </strong>
-                </div>
-
-              </div>
-
-              <div>
-
-                <CloudRain
-                  size={18}
-                />
-
-                <div>
-                  <span>
-                    Rain Sensor
-                  </span>
-
-                  <strong>
-                    CERAH / HUJAN
-                  </strong>
-                </div>
-
-              </div>
-
-            </div>
-
-            <code>
-              farm_environment
-            </code>
-
-          </article>
-
-          {/* CORE */}
-
-          <div className="about-data-core">
-
-            <span />
-
-            <div>
-
-              <Wifi
-                size={25}
-              />
-
-              <strong>
-                IoT
-              </strong>
-
-              <small>
-                Data Flow
-              </small>
-
-            </div>
-
-            <span />
+            <p>
+              Menyimpan data
+            </p>
 
           </div>
 
-          {/* PER PLOT */}
+          <ArrowRight
+            className="about-flow-arrow"
+            size={22}
+          />
 
-          <article className="about-data-panel plot">
+          <div className="about-flow-item">
 
-            <div className="about-data-panel-header">
-
-              <div>
-
-                <span>
-                  PER PETAK
-                </span>
-
-                <h3>
-                  Sensor Data
-                </h3>
-
-              </div>
-
-              <Sprout
-                size={23}
-              />
-
+            <div className="about-flow-icon">
+              <Code2 size={23} />
             </div>
 
-            <div className="about-data-items">
+            <span>
+              STEP 04
+            </span>
 
-              <div>
+            <strong>
+              Dashboard
+            </strong>
 
-                <Droplets
-                  size={18}
-                />
+            <p>
+              Menampilkan monitoring
+            </p>
 
-                <div>
-                  <span>
-                    Soil Sensor
-                  </span>
+          </div>
 
-                  <strong>
-                    Soil Moisture
-                  </strong>
-                </div>
+          <ArrowRight
+            className="about-flow-arrow"
+            size={22}
+          />
 
-              </div>
+          <div className="about-flow-item">
 
-              <div>
-
-                <Power
-                  size={18}
-                />
-
-                <div>
-                  <span>
-                    Irrigation
-                  </span>
-
-                  <strong>
-                    Pump + Mode
-                  </strong>
-                </div>
-
-              </div>
-
+            <div className="about-flow-icon">
+              <Power size={23} />
             </div>
 
-            <code>
-              sensor_data
-            </code>
+            <span>
+              STEP 05
+            </span>
 
-          </article>
+            <strong>
+              Pump
+            </strong>
+
+            <p>
+              Menjalankan irigasi
+            </p>
+
+          </div>
 
         </div>
 
       </section>
 
       {/* ===================================================
-          IRRIGATION RULE
+          IRRIGATION LOGIC
           =================================================== */}
 
-      <section className="about-rule-section">
+      <section className="about-irrigation">
 
-        <div className="about-rule-copy">
+        <div className="about-irrigation-copy">
 
           <span>
-            04 • AUTOMATION LOGIC
+            LOGIKA IRIGASI
           </span>
 
           <h2>
-            Aturan irigasi
-            yang sederhana,
-            tapi jelas.
+            Aturan kontrol otomatis
           </h2>
 
           <p>
-            Rain sensor selalu memiliki
-            prioritas tertinggi dalam
-            sistem kontrol pompa.
+            Rain sensor memiliki
+            prioritas tertinggi.
+            Saat tidak hujan, pompa
+            dengan mode AUTO mengikuti
+            nilai soil moisture
+            masing-masing petak.
           </p>
 
         </div>
 
-        <div className="about-rule-grid">
+        <div className="about-irrigation-rules">
 
           <article className="rain">
 
-            <CloudRain
-              size={22}
-            />
+            <CloudRain size={25} />
 
             <span>
               HUJAN
             </span>
 
             <strong>
-              Semua OFF
+              Semua Pompa OFF
             </strong>
 
             <p>
-              Global override aktif.
+              Rain override aktif.
             </p>
 
           </article>
 
           <article className="dry">
 
-            <Droplets
-              size={22}
-            />
+            <Droplets size={25} />
 
             <span>
               CERAH + SOIL &lt; 25%
             </span>
 
             <strong>
-              AUTO ON
+              AUTO Pump ON
             </strong>
 
             <p>
@@ -883,22 +604,20 @@ function AboutPage() {
 
           </article>
 
-          <article className="normal">
+          <article className="safe">
 
-            <Sun
-              size={22}
-            />
+            <Droplets size={25} />
 
             <span>
               CERAH + SOIL ≥ 25%
             </span>
 
             <strong>
-              AUTO OFF
+              AUTO Pump OFF
             </strong>
 
             <p>
-              Kelembapan mencukupi.
+              Kelembapan tanah mencukupi.
             </p>
 
           </article>
@@ -908,32 +627,26 @@ function AboutPage() {
       </section>
 
       {/* ===================================================
-          TECH STACK
+          TECHNOLOGY
           =================================================== */}
 
-      <section
-        className="about-tech-section"
-        id="technology"
-      >
+      <section className="about-section">
 
-        <div className="about-heading">
+        <div className="about-section-heading">
 
-          <div>
+          <span>
+            TECHNOLOGY STACK
+          </span>
 
-            <span>
-              05 • TECHNOLOGY STACK
-            </span>
+          <h2>
+            Teknologi yang digunakan
+          </h2>
 
-            <h2>
-              Teknologi yang
-              menggerakkan sistem.
-            </h2>
-
-          </div>
-
-          <Cpu
-            size={27}
-          />
+          <p>
+            Teknologi utama yang
+            digunakan untuk membangun
+            sistem Smart Farming.
+          </p>
 
         </div>
 
@@ -951,23 +664,25 @@ function AboutPage() {
                   }
                 >
 
-                  <div>
-                    <Icon
-                      size={22}
-                    />
+                  <div className="about-tech-icon">
+                    <Icon size={22} />
                   </div>
 
-                  <span>
-                    {
-                      technology.label
-                    }
-                  </span>
+                  <div>
 
-                  <h3>
-                    {
-                      technology.name
-                    }
-                  </h3>
+                    <span>
+                      {
+                        technology.type
+                      }
+                    </span>
+
+                    <strong>
+                      {
+                        technology.name
+                      }
+                    </strong>
+
+                  </div>
 
                 </article>
               );
@@ -979,15 +694,133 @@ function AboutPage() {
       </section>
 
       {/* ===================================================
+          DEVELOPER / CONTACT
+          =================================================== */}
+
+      <section className="about-contact">
+
+        <div className="about-contact-profile">
+
+          <div className="about-contact-avatar">
+            <Sprout size={32} />
+          </div>
+
+          <div>
+
+            <span>
+              DEVELOPER & PROJECT
+            </span>
+
+            <h2>
+              Smart Farming IoT
+            </h2>
+
+            <p>
+              Informasi developer,
+              repository, dan kontak
+              project Smart Farming.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div className="about-contact-links">
+
+          {/* GITHUB */}
+
+          <a
+            href="https://github.com/solternaindonesia-dotcom"
+            target="_blank"
+            rel="noreferrer"
+          >
+
+            <div className="about-contact-link-icon">
+              <Code2 size={21} />
+            </div>
+
+            <div>
+
+              <span>
+                GITHUB PROFILE
+              </span>
+
+              <strong>
+                github.com/solternaindonesia-dotcom
+              </strong>
+
+            </div>
+
+            <ArrowRight size={17} />
+
+          </a>
+
+          {/* REPOSITORY */}
+
+          <a
+            href="https://github.com/solternaindonesia-dotcom/MonitoringSmartFarming.git"
+            target="_blank"
+            rel="noreferrer"
+          >
+
+            <div className="about-contact-link-icon">
+              <Database size={21} />
+            </div>
+
+            <div>
+
+              <span>
+                PROJECT REPOSITORY
+              </span>
+
+              <strong>
+                Smart Farming IoT
+              </strong>
+
+            </div>
+
+            <ArrowRight size={17} />
+
+          </a>
+
+          {/* EMAIL */}
+
+          <a
+            href="mailto:[solternaindonesia@gmail.com]"
+          >
+
+            <div className="about-contact-link-icon">
+              <Leaf size={21} />
+            </div>
+
+            <div>
+
+              <span>
+                EMAIL
+              </span>
+
+              <strong>
+                solternaindonesia@gmail.com
+              </strong>
+
+            </div>
+
+            <ArrowRight size={17} />
+
+          </a>
+
+        </div>
+
+      </section>
+
+      {/* ===================================================
           CLOSING
           =================================================== */}
 
-      <section className="about-ending">
+      <section className="about-closing">
 
-        <div className="about-ending-icon">
-          <Leaf
-            size={29}
-          />
+        <div className="about-closing-icon">
+          <Leaf size={29} />
         </div>
 
         <div>
@@ -997,27 +830,17 @@ function AboutPage() {
           </span>
 
           <h2>
-            Lebih terhubung.
-            Lebih terukur.
-            Lebih cerdas.
+            Monitoring dan irigasi
+            dalam satu sistem.
           </h2>
 
           <p>
-            Menggabungkan teknologi IoT,
-            automation, database, dan
-            visualisasi untuk membantu
-            monitoring pertanian modern.
+            Menggabungkan teknologi,
+            sensor, database, dan
+            otomatisasi untuk membantu
+            monitoring pertanian
+            menjadi lebih terstruktur.
           </p>
-
-        </div>
-
-        <div className="about-ending-chip">
-
-          <Sprout
-            size={16}
-          />
-
-          11 PLOTS CONNECTED
 
         </div>
 

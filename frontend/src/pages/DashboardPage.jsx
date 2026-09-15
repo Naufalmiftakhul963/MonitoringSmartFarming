@@ -1,4 +1,10 @@
 import {
+  lazy,
+  Suspense,
+  useState,
+} from "react";
+
+import {
   Area,
   AreaChart,
   Cell,
@@ -20,7 +26,6 @@ import {
   Cpu,
   Database,
   Droplets,
-  Gauge,
   Power,
   RefreshCw,
   Sprout,
@@ -29,12 +34,17 @@ import {
   Wind,
 } from "lucide-react";
 
-import Farm3DModel from "../components/Farm3DModel/Farm3DModel";
+import Farm2DOverview from "../components/Farm2DOverview/Farm2DOverview";
 import SensorTable from "../components/SensorTable";
+
+const Farm3DModel = lazy(() =>
+  import(
+    "../components/Farm3DModel/Farm3DModel"
+  )
+);
 
 import {
   getGlobalStatusClass,
-  getGlobalStatusLabel,
   getRecommendation,
   getWeatherStatus,
   isRaining,
@@ -43,7 +53,7 @@ import {
 import "./DashboardPage.css";
 
 /* =========================================================
-   STATISTIK
+   STATISTIC HELPERS
    ========================================================= */
 
 function getAverage(
@@ -62,13 +72,14 @@ function getAverage(
       ) =>
         sum +
         Number(
-          item[key] || 0
+          item?.[key] || 0
         ),
       0
     );
 
   return (
-    total / data.length
+    total /
+    data.length
   ).toFixed(1);
 }
 
@@ -84,7 +95,7 @@ function getMinimum(
     ...data.map(
       (item) =>
         Number(
-          item[key] || 0
+          item?.[key] || 0
         )
     )
   );
@@ -102,14 +113,14 @@ function getMaximum(
     ...data.map(
       (item) =>
         Number(
-          item[key] || 0
+          item?.[key] || 0
         )
     )
   );
 }
 
 /* =========================================================
-   TOOLTIP
+   CHART TOOLTIP
    ========================================================= */
 
 function ModernTooltip({
@@ -129,7 +140,6 @@ function ModernTooltip({
 
   return (
     <div className="dashboard-tooltip">
-
       <span>
         {label}
       </span>
@@ -139,7 +149,6 @@ function ModernTooltip({
         {payload[0].value}
         {unit}
       </strong>
-
     </div>
   );
 }
@@ -169,7 +178,6 @@ function ChartHeader({
         </div>
 
         <div>
-
           <h3>
             {title}
           </h3>
@@ -177,7 +185,6 @@ function ChartHeader({
           <p>
             {description}
           </p>
-
         </div>
 
       </div>
@@ -185,7 +192,9 @@ function ChartHeader({
       <div className="dashboard-chart-stats">
 
         <div>
-          <span>MIN</span>
+          <span>
+            MIN
+          </span>
 
           <strong>
             {getMinimum(
@@ -211,7 +220,9 @@ function ChartHeader({
         </div>
 
         <div>
-          <span>MAKS</span>
+          <span>
+            MAKS
+          </span>
 
           <strong>
             {getMaximum(
@@ -229,7 +240,7 @@ function ChartHeader({
 }
 
 /* =========================================================
-   DASHBOARD
+   DASHBOARD PAGE
    ========================================================= */
 
 function DashboardPage({
@@ -240,6 +251,15 @@ function DashboardPage({
   fetchData,
   loading = false,
 }) {
+  const [
+    visualMode,
+    setVisualMode,
+  ] = useState("2d");
+
+  /* =======================================================
+     ENVIRONMENT
+     ======================================================= */
+
   const raining =
     isRaining(
       environment
@@ -268,7 +288,6 @@ function DashboardPage({
   const statusData = [
     {
       name: "Normal",
-
       value:
         sensors.filter(
           (item) =>
@@ -280,7 +299,6 @@ function DashboardPage({
 
     {
       name: "Waspada",
-
       value:
         sensors.filter(
           (item) =>
@@ -292,7 +310,6 @@ function DashboardPage({
 
     {
       name: "Kritis",
-
       value:
         sensors.filter(
           (item) =>
@@ -311,9 +328,12 @@ function DashboardPage({
         ) === "critical"
     );
 
+  /* =======================================================
+     SOIL SUMMARY
+     ======================================================= */
+
   const avgSoilMoisture =
-    summary
-      ?.avgSoilMoisture !==
+    summary?.avgSoilMoisture !==
     undefined
       ? Number(
           summary.avgSoilMoisture
@@ -479,6 +499,7 @@ function DashboardPage({
 
           <div className="dashboard-eyebrow">
             <Sprout size={17} />
+
             Smart Farming IoT Dashboard
           </div>
 
@@ -492,7 +513,7 @@ function DashboardPage({
             Pantau kelembapan tanah setiap
             petak, kondisi lingkungan global,
             rain sensor, pompa irigasi,
-            visualisasi lahan 3D, dan kontrol
+            visualisasi lahan, dan kontrol
             otomatis secara terintegrasi.
           </p>
 
@@ -517,6 +538,8 @@ function DashboardPage({
 
         </div>
 
+        {/* LIVE PANEL */}
+
         <div className="dashboard-live-panel">
 
           <div className="dashboard-live-label">
@@ -534,23 +557,16 @@ function DashboardPage({
             Update terakhir
 
             <strong>
-              {lastUpdate ||
-                "-"}
+              {lastUpdate || "-"}
             </strong>
           </p>
 
           <button
             type="button"
-            onClick={
-              fetchData
-            }
-            disabled={
-              loading
-            }
+            onClick={fetchData}
+            disabled={loading}
           >
-            <RefreshCw
-              size={16}
-            />
+            <RefreshCw size={16} />
 
             {loading
               ? "Memuat..."
@@ -562,7 +578,7 @@ function DashboardPage({
       </section>
 
       {/* ===================================================
-          ENVIRONMENT STATUS
+          ENVIRONMENT
           =================================================== */}
 
       <section
@@ -596,9 +612,7 @@ function DashboardPage({
 
           </div>
 
-          <WeatherIcon
-            size={28}
-          />
+          <WeatherIcon size={28} />
 
         </div>
 
@@ -627,9 +641,7 @@ function DashboardPage({
                 <div
                   className={`dashboard-summary-icon ${tone}`}
                 >
-                  <Icon
-                    size={23}
-                  />
+                  <Icon size={23} />
                 </div>
 
                 <div>
@@ -656,14 +668,20 @@ function DashboardPage({
       )}
 
       {/* ===================================================
-          3D + ALERT
+          FARM VISUAL + ALERT
           =================================================== */}
 
       <section className="dashboard-primary-grid">
 
+        {/* =================================================
+            VISUAL MONITORING
+            ================================================= */}
+
         <article className="dashboard-panel dashboard-3d-panel">
 
-          <div className="dashboard-panel-header">
+          {/* HEADER */}
+
+          <div className="dashboard-panel-header dashboard-visual-header">
 
             <div>
 
@@ -672,34 +690,236 @@ function DashboardPage({
               </span>
 
               <h2>
-                Denah Visual Petak Lahan 3D
+                {visualMode === "2d"
+                  ? "Denah Monitoring Lahan 2D"
+                  : "Visualisasi Smart Farm 3D"}
               </h2>
 
               <p>
-                Visualisasi kondisi tanah,
-                pompa irigasi, sensor, dan
-                lingkungan smart farming.
+                {visualMode === "2d"
+                  ? "Tampilan ringan untuk melihat kondisi seluruh petak dengan cepat."
+                  : "Mode interaktif untuk menjelajahi sensor, pompa, tanaman, dan area Smart Farming."}
               </p>
 
             </div>
 
-            <div className="dashboard-header-badge">
-              <Gauge size={15} />
-              Interactive Model
+          </div>
+
+          {/* ===============================================
+              SPECIAL VISUAL MODE CARD
+              =============================================== */}
+
+          <div className="dashboard-visual-mode-card">
+
+            {/* TOP */}
+
+            <div className="dashboard-visual-mode-top">
+
+              <div>
+
+                <span className="dashboard-visual-mode-label">
+                  MODE VISUALISASI
+                </span>
+
+                <h3>
+                  Pilih tampilan lahan
+                </h3>
+
+                <p>
+                  Gunakan tampilan 2D untuk
+                  monitoring cepat atau buka
+                  mode 3D untuk eksplorasi
+                  lahan secara interaktif.
+                </p>
+
+              </div>
+
+              <div className="dashboard-visual-current">
+
+                <span className="dashboard-visual-current-dot" />
+
+                {visualMode === "2d"
+                  ? "2D sedang aktif"
+                  : "3D sedang aktif"}
+
+              </div>
+
+            </div>
+
+            {/* OPTIONS */}
+
+            <div
+              className="dashboard-visual-mode-options"
+              role="group"
+              aria-label="Pilih mode visualisasi"
+            >
+
+              {/* 2D */}
+
+              <button
+                type="button"
+                aria-pressed={
+                  visualMode === "2d"
+                }
+                className={
+                  visualMode === "2d"
+                    ? "dashboard-mode-option active"
+                    : "dashboard-mode-option"
+                }
+                onClick={() =>
+                  setVisualMode("2d")
+                }
+              >
+
+                <div className="dashboard-mode-number">
+                  2D
+                </div>
+
+                <div className="dashboard-mode-copy">
+
+                  <div className="dashboard-mode-title-row">
+
+                    <strong>
+                      Tampilan 2D
+                    </strong>
+
+                    {visualMode === "2d" && (
+                      <span className="dashboard-mode-active-badge">
+                        AKTIF
+                      </span>
+                    )}
+
+                  </div>
+
+                  <span>
+                    Monitoring cepat dan ringan
+                  </span>
+
+                  <p>
+                    Lihat status seluruh petak,
+                    kondisi tanah, cuaca, dan
+                    lingkungan dalam satu denah.
+                  </p>
+
+                </div>
+
+                <div className="dashboard-mode-action">
+                  {visualMode === "2d"
+                    ? "Sedang digunakan"
+                    : "Pilih 2D"}
+                </div>
+
+              </button>
+
+              {/* 3D */}
+
+              <button
+                type="button"
+                aria-pressed={
+                  visualMode === "3d"
+                }
+                className={
+                  visualMode === "3d"
+                    ? "dashboard-mode-option active"
+                    : "dashboard-mode-option"
+                }
+                onClick={() =>
+                  setVisualMode("3d")
+                }
+              >
+
+                <div className="dashboard-mode-number">
+                  3D
+                </div>
+
+                <div className="dashboard-mode-copy">
+
+                  <div className="dashboard-mode-title-row">
+
+                    <strong>
+                      Visualisasi 3D
+                    </strong>
+
+                    {visualMode === "3d" && (
+                      <span className="dashboard-mode-active-badge">
+                        AKTIF
+                      </span>
+                    )}
+
+                  </div>
+
+                  <span>
+                    Visualisasi interaktif
+                  </span>
+
+                  <p>
+                    Jelajahi bentuk lahan,
+                    tanaman, sensor, pompa,
+                    irigasi, dan area Smart Farm.
+                  </p>
+
+                </div>
+
+                <div className="dashboard-mode-action">
+                  {visualMode === "3d"
+                    ? "Sedang digunakan"
+                    : "Buka 3D"}
+                </div>
+
+              </button>
+
             </div>
 
           </div>
 
-          <Farm3DModel
-            sensors={
-              sensors
-            }
-            environment={
-              environment
-            }
-          />
+          {/* ===============================================
+              FARM VIEW
+              =============================================== */}
+
+          {visualMode === "2d" ? (
+            <Farm2DOverview
+              sensors={sensors}
+              environment={environment}
+            />
+          ) : (
+            <Suspense
+              fallback={
+                <div className="dashboard-3d-loading">
+
+                  <div className="dashboard-3d-loading-icon">
+                    <Sprout size={28} />
+                  </div>
+
+                  <strong>
+                    Menyiapkan Smart Farm 3D...
+                  </strong>
+
+                  <span>
+                    Model 3D dimuat hanya
+                    saat dibutuhkan.
+                  </span>
+
+                  <div className="dashboard-3d-loading-bar">
+                    <span />
+                  </div>
+
+                </div>
+              }
+            >
+
+              <Farm3DModel
+                sensors={sensors}
+                environment={environment}
+              />
+
+            </Suspense>
+          )}
 
         </article>
+
+        {/* =================================================
+            ALERT
+            ================================================= */}
 
         <article className="dashboard-panel dashboard-alert-panel">
 
@@ -724,22 +944,18 @@ function DashboardPage({
             </div>
 
             <div className="dashboard-alert-count">
-              {
-                criticalSensors.length
-              }
+              {criticalSensors.length}
             </div>
 
           </div>
 
-          {criticalSensors.length ===
-          0 ? (
+          {criticalSensors.length === 0 ? (
             <div className="dashboard-safe-alert">
 
-              <CheckCircle
-                size={23}
-              />
+              <CheckCircle size={23} />
 
               <div>
+
                 <strong>
                   Seluruh petak aman
                 </strong>
@@ -748,6 +964,7 @@ function DashboardPage({
                   Tidak ditemukan tanah
                   dengan kondisi kritis.
                 </p>
+
               </div>
 
             </div>
@@ -758,14 +975,10 @@ function DashboardPage({
                 (item) => (
                   <div
                     className="dashboard-alert-item"
-                    key={
-                      item.id
-                    }
+                    key={item.id}
                   >
 
-                    <AlertTriangle
-                      size={18}
-                    />
+                    <AlertTriangle size={18} />
 
                     <div>
 
@@ -795,7 +1008,7 @@ function DashboardPage({
       </section>
 
       {/* ===================================================
-          GLOBAL ENVIRONMENT + SYSTEM
+          DEVICE STATUS
           =================================================== */}
 
       <section className="dashboard-device-grid">
@@ -807,6 +1020,7 @@ function DashboardPage({
           </div>
 
           <div>
+
             <span>
               Pompa Irigasi
             </span>
@@ -816,6 +1030,7 @@ function DashboardPage({
                 ? "Semua OFF"
                 : `${summary?.activePump ?? 0} Aktif`}
             </strong>
+
           </div>
 
         </article>
@@ -823,12 +1038,11 @@ function DashboardPage({
         <article className="dashboard-device-card weather">
 
           <div className="dashboard-device-icon">
-            <WeatherIcon
-              size={22}
-            />
+            <WeatherIcon size={22} />
           </div>
 
           <div>
+
             <span>
               Rain Sensor
             </span>
@@ -836,6 +1050,7 @@ function DashboardPage({
             <strong>
               {weatherStatus}
             </strong>
+
           </div>
 
         </article>
@@ -847,6 +1062,7 @@ function DashboardPage({
           </div>
 
           <div>
+
             <span>
               Kelembapan Udara
             </span>
@@ -854,6 +1070,7 @@ function DashboardPage({
             <strong>
               {humidity}%
             </strong>
+
           </div>
 
         </article>
@@ -865,16 +1082,17 @@ function DashboardPage({
           </div>
 
           <div>
+
             <span>
               Kontrol Otomatis
             </span>
 
             <strong>
-              {summary?.autoModeArea ??
-                0}
+              {summary?.autoModeArea ?? 0}
               {" "}
               Petak AUTO
             </strong>
+
           </div>
 
         </article>
@@ -1001,17 +1219,21 @@ function DashboardPage({
               </h2>
 
               <p>
-                Status berdasarkan kelembapan
-                tanah setiap petak.
+                Status berdasarkan
+                kelembapan tanah setiap
+                petak.
               </p>
 
             </div>
 
             <div className="dashboard-petak-badge">
+
               <Sprout size={16} />
+
               {sensors.length}
               {" "}
               Petak
+
             </div>
 
           </div>
@@ -1021,26 +1243,23 @@ function DashboardPage({
             <article className="dashboard-status-card normal">
 
               <div className="dashboard-status-icon">
-                <CheckCircle
-                  size={21}
-                />
+                <CheckCircle size={21} />
               </div>
 
               <div>
+
                 <span>
                   Normal
                 </span>
 
                 <strong>
-                  {
-                    statusData[0]
-                      .value
-                  }
+                  {statusData[0].value}
                 </strong>
 
                 <p>
                   Soil ≥ 40%
                 </p>
+
               </div>
 
             </article>
@@ -1048,26 +1267,23 @@ function DashboardPage({
             <article className="dashboard-status-card warning">
 
               <div className="dashboard-status-icon">
-                <AlertTriangle
-                  size={21}
-                />
+                <AlertTriangle size={21} />
               </div>
 
               <div>
+
                 <span>
                   Waspada
                 </span>
 
                 <strong>
-                  {
-                    statusData[1]
-                      .value
-                  }
+                  {statusData[1].value}
                 </strong>
 
                 <p>
                   Soil 25–39%
                 </p>
+
               </div>
 
             </article>
@@ -1075,26 +1291,23 @@ function DashboardPage({
             <article className="dashboard-status-card critical">
 
               <div className="dashboard-status-icon">
-                <AlertTriangle
-                  size={21}
-                />
+                <AlertTriangle size={21} />
               </div>
 
               <div>
+
                 <span>
                   Kritis
                 </span>
 
                 <strong>
-                  {
-                    statusData[2]
-                      .value
-                  }
+                  {statusData[2].value}
                 </strong>
 
                 <p>
                   Soil &lt; 25%
                 </p>
+
               </div>
 
             </article>
@@ -1102,6 +1315,8 @@ function DashboardPage({
           </div>
 
         </div>
+
+        {/* DONUT */}
 
         <div className="dashboard-donut-card">
 
@@ -1114,9 +1329,7 @@ function DashboardPage({
               <PieChart>
 
                 <Pie
-                  data={
-                    statusData
-                  }
+                  data={statusData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
@@ -1128,17 +1341,9 @@ function DashboardPage({
                   stroke="none"
                 >
 
-                  <Cell
-                    fill="#22c55e"
-                  />
-
-                  <Cell
-                    fill="#eab308"
-                  />
-
-                  <Cell
-                    fill="#ef4444"
-                  />
+                  <Cell fill="#22c55e" />
+                  <Cell fill="#eab308" />
+                  <Cell fill="#ef4444" />
 
                 </Pie>
 
@@ -1150,9 +1355,7 @@ function DashboardPage({
             <div className="dashboard-donut-center">
 
               <strong>
-                {
-                  sensors.length
-                }
+                {sensors.length}
               </strong>
 
               <span>
@@ -1173,7 +1376,7 @@ function DashboardPage({
       </section>
 
       {/* ===================================================
-          SOIL ANALYTICS
+          SENSOR ANALYTICS
           =================================================== */}
 
       <section className="dashboard-analytics-section">
@@ -1210,14 +1413,10 @@ function DashboardPage({
           <article className="dashboard-chart-card">
 
             <ChartHeader
-              icon={
-                Droplets
-              }
+              icon={Droplets}
               title="Kelembapan Tanah"
               description="Persentase kadar air tanah setiap petak."
-              sensors={
-                sensors
-              }
+              sensors={sensors}
               dataKey="soil_moisture"
               unit="%"
               tone="green"
@@ -1228,9 +1427,7 @@ function DashboardPage({
               height={320}
             >
               <AreaChart
-                data={
-                  sensors
-                }
+                data={sensors}
                 margin={{
                   top: 18,
                   right: 20,
@@ -1240,6 +1437,7 @@ function DashboardPage({
               >
 
                 <defs>
+
                   <linearGradient
                     id="soilGradient"
                     x1="0"
@@ -1247,6 +1445,7 @@ function DashboardPage({
                     x2="0"
                     y2="1"
                   >
+
                     <stop
                       offset="0%"
                       stopColor="#16a34a"
@@ -1258,38 +1457,27 @@ function DashboardPage({
                       stopColor="#16a34a"
                       stopOpacity={0.02}
                     />
+
                   </linearGradient>
+
                 </defs>
 
                 <CartesianGrid
                   strokeDasharray="4 6"
-                  vertical={
-                    false
-                  }
+                  vertical={false}
                   stroke="#e2e8f0"
                 />
 
                 <XAxis
                   dataKey="area"
-                  axisLine={
-                    false
-                  }
-                  tickLine={
-                    false
-                  }
+                  axisLine={false}
+                  tickLine={false}
                 />
 
                 <YAxis
-                  domain={[
-                    0,
-                    100,
-                  ]}
-                  axisLine={
-                    false
-                  }
-                  tickLine={
-                    false
-                  }
+                  domain={[0, 100]}
+                  axisLine={false}
+                  tickLine={false}
                 />
 
                 <Tooltip
@@ -1309,12 +1497,9 @@ function DashboardPage({
                   fill="url(#soilGradient)"
                   dot={{
                     r: 4,
-                    fill:
-                      "#ffffff",
-                    stroke:
-                      "#16a34a",
-                    strokeWidth:
-                      3,
+                    fill: "#ffffff",
+                    stroke: "#16a34a",
+                    strokeWidth: 3,
                   }}
                   activeDot={{
                     r: 7,
@@ -1331,10 +1516,12 @@ function DashboardPage({
       </section>
 
       {/* ===================================================
-          INSIGHT
+          INSIGHTS
           =================================================== */}
 
       <section className="dashboard-insight-grid">
+
+        {/* RECOMMENDATION */}
 
         <article className="dashboard-panel">
 
@@ -1352,15 +1539,13 @@ function DashboardPage({
 
               <p>
                 Rekomendasi berdasarkan
-                rain sensor dan kelembapan
-                tanah.
+                rain sensor dan
+                kelembapan tanah.
               </p>
 
             </div>
 
-            <TrendingUp
-              size={21}
-            />
+            <TrendingUp size={21} />
 
           </div>
 
@@ -1372,24 +1557,17 @@ function DashboardPage({
                   className={`dashboard-recommendation-item ${getGlobalStatusClass(
                     item
                   )}`}
-                  key={
-                    item.id
-                  }
+                  key={item.id}
                 >
 
                   <div>
 
                     {getGlobalStatusClass(
                       item
-                    ) ===
-                    "normal" ? (
-                      <CheckCircle
-                        size={20}
-                      />
+                    ) === "normal" ? (
+                      <CheckCircle size={20} />
                     ) : (
-                      <AlertTriangle
-                        size={20}
-                      />
+                      <AlertTriangle size={20} />
                     )}
 
                   </div>
@@ -1397,9 +1575,7 @@ function DashboardPage({
                   <div>
 
                     <strong>
-                      {
-                        item.area
-                      }
+                      {item.area}
                     </strong>
 
                     <p>
@@ -1418,6 +1594,8 @@ function DashboardPage({
           </div>
 
         </article>
+
+        {/* ACTIVITY */}
 
         <article className="dashboard-panel">
 
@@ -1440,9 +1618,7 @@ function DashboardPage({
 
             </div>
 
-            <Activity
-              size={21}
-            />
+            <Activity size={21} />
 
           </div>
 
@@ -1450,9 +1626,7 @@ function DashboardPage({
 
             <div className="dashboard-activity-item">
 
-              <Database
-                size={18}
-              />
+              <Database size={18} />
 
               <div>
 
@@ -1471,9 +1645,7 @@ function DashboardPage({
 
             <div className="dashboard-activity-item">
 
-              <WeatherIcon
-                size={18}
-              />
+              <WeatherIcon size={18} />
 
               <div>
 
@@ -1494,9 +1666,7 @@ function DashboardPage({
 
             <div className="dashboard-activity-item">
 
-              <Wind
-                size={18}
-              />
+              <Wind size={18} />
 
               <div>
 
@@ -1516,9 +1686,7 @@ function DashboardPage({
 
             <div className="dashboard-activity-item">
 
-              <Droplets
-                size={18}
-              />
+              <Droplets size={18} />
 
               <div>
 
@@ -1542,19 +1710,11 @@ function DashboardPage({
       </section>
 
       {/* ===================================================
-          TABLE
+          SENSOR TABLE
           =================================================== */}
 
       <SensorTable
-        sensors={
-          sensors
-        }
-        getStatusClass={
-          getGlobalStatusClass
-        }
-        getStatusLabel={
-          getGlobalStatusLabel
-        }
+        sensors={sensors}
       />
 
     </div>
